@@ -867,31 +867,21 @@ defineExpose({
               </a-col>
               <a-col :xs="24" :lg="12" :offset="0">
                 <a-form-item>
-                  <a-typography-title :level="5" :class="{ 'require-field': isDockerMode }">
-                    {{ t("更新命令所用的镜像") }}
+                  <a-typography-title :level="5">
+                    {{ t("在容器中执行更新命令") }}
                   </a-typography-title>
                   <a-typography-paragraph>
                     <a-tooltip
-                      :title="
-                        formData.instance.imageSelectMethod === 'SELECT'
-                          ? t('TXT_CODE_ec734b5c')
-                          : t('TXT_CODE_4a570d32')
-                      "
+                      :title="t('可以选择更新命令专用的镜像，与运行的镜像分开。')"
                       placement="top"
                     >
-                      <a-typography-text
-                        type="secondary"
-                        :class="[!isPhone && 'two-line-height', 'typography-text-ellipsis']"
-                      >
-                        {{
-                          formData.instance.imageSelectMethod === "SELECT"
-                            ? t("TXT_CODE_ec734b5c")
-                            : t("TXT_CODE_4a570d32")
-                        }}
+                      <a-typography-text type="secondary" :class="['typography-text-ellipsis']">
+                        {{ t("可以选择更新命令专用的镜像，与运行的镜像分开。") }}
                       </a-typography-text>
                     </a-tooltip>
                   </a-typography-paragraph>
                   <DockerImageSelect
+                    :is-allow-empty="true"
                     :model-value="formData.instance.config?.updateCommandImage ?? ''"
                     :image-select-method="formData.instance.imageSelectMethod ?? 'SELECT'"
                     :daemon-id="daemonId ?? ''"
@@ -907,10 +897,7 @@ defineExpose({
                   </a-typography-title>
                   <a-typography-paragraph>
                     <a-tooltip :title="t('TXT_CODE_6e69b5a5')" placement="top">
-                      <a-typography-text
-                        type="secondary"
-                        :class="[!isPhone && 'two-line-height', 'typography-text-ellipsis']"
-                      >
+                      <a-typography-text type="secondary" :class="['typography-text-ellipsis']">
                         {{ t("TXT_CODE_6e69b5a5") }}
                       </a-typography-text>
                     </a-tooltip>

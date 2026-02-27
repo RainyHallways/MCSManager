@@ -4,7 +4,7 @@ import { t } from "@/lang/i18n";
 import { imageList } from "@/services/apis/envImage";
 import { arrayFilter } from "@/tools/array";
 import type { DefaultOptionType } from "ant-design-vue/es/select";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
 const IMAGE_DEFINE = {
   NEW: "__MCSM_NEW_IMAGE__",
@@ -67,10 +67,6 @@ const loadImages = async () => {
   }
 };
 
-onMounted(() => {
-  loadImages();
-});
-
 const selectImage = (row: DefaultOptionType) => {
   const image = row.value;
   if (typeof image === "string" && image === IMAGE_DEFINE.NEW) {
@@ -95,7 +91,7 @@ const selectImage = (row: DefaultOptionType) => {
       style="width: 100%"
       :placeholder="t('TXT_CODE_3bb646e4')"
       :loading="loading"
-      :disabled="loading"
+      @focus="loadImages"
       @update:value="(v: any) => emit('update:modelValue', v)"
       @change="(_e, option: DefaultOptionType) => selectImage(option)"
     >
