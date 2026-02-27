@@ -166,6 +166,7 @@ export const defaultInstanceInfo: IGlobalInstanceConfig = {
   fileCode: "UTF-8",
   processType: "general",
   updateCommand: "",
+  updateCommandImage: "",
   runAs: "",
   actionCommandList: [],
   crlf: 1,

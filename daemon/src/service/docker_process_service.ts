@@ -40,16 +40,22 @@ export interface IDockerProcessAdapterStartParam {
 export class SetupDockerContainer extends AsyncTask {
   private container?: Docker.Container;
 
-  constructor(public readonly instance: Instance, public readonly startCommand?: string) {
+  constructor(
+    public readonly instance: Instance,
+    public readonly startCommand?: string,
+    /** 覆盖使用的镜像（如 updateCommandImage）；未设置时使用 instance.config.docker.image */
+    public readonly imageOverride?: string
+  ) {
     super();
   }
 
   public async onStart() {
     const instance = this.instance;
     const customCommand = this.startCommand;
+    const useImageOverride = Boolean(this.imageOverride?.trim());
 
     try {
-      await instance.forceExec(new DockerPullCommand());
+      await instance.forceExec(new DockerPullCommand(this.imageOverride?.trim()));
     } catch (error: any) {
       throw error;
     }
@@ -251,6 +257,8 @@ export class SetupDockerContainer extends AsyncTask {
       entrypoint = [entrypoint];
     }
 
+    const effectiveImage = useImageOverride ? this.imageOverride! : dockerConfig.image;
+
     logger.info(`Container Entrypoint: ${entrypoint}`);
     logger.info(`Container Start Command: ${startCmd}`);
     logger.info(`Docker Version: ${dockerVersion}`);
@@ -261,7 +269,7 @@ export class SetupDockerContainer extends AsyncTask {
       Cmd: startCmd,
       name: containerName,
       Hostname: containerName,
-      Image: dockerConfig.image,
+      Image: effectiveImage,
       AttachStdin: true,
       AttachStdout: true,
       AttachStderr: true,

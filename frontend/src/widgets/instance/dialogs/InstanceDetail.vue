@@ -365,7 +365,9 @@ const encodeFormData = () => {
   throw new Error("Ref Options is null");
 };
 
-const handleEditDockerConfig = async (type: "port" | "volume" | "env" | "label" | "device" | "capability") => {
+const handleEditDockerConfig = async (
+  type: "port" | "volume" | "env" | "label" | "device" | "capability"
+) => {
   if (type === "port" && formData.value?.instance?.config) {
     // "25565:25565/tcp 8080:8080/tcp" -> Array
     const portArray = dockerPortsArray(formData.value?.instance?.config.docker.ports || []);
@@ -418,23 +420,23 @@ const handleEditDockerConfig = async (type: "port" | "volume" | "env" | "label" 
     const capDrop = formData.value.instance.config.docker.capDrop || [];
 
     const allLabels = [...new Set([...capAdd, ...capDrop])]; // Deduplication solve
-    const dialogParams = allLabels.map(label => ({
-        label: label,
-        value: capAdd.includes(label)?"add":"drop"
+    const dialogParams = allLabels.map((label) => ({
+      label: label,
+      value: capAdd.includes(label) ? "add" : "drop"
     }));
 
     const result = await useDockerCapabilityEditDialog(dialogParams);
 
     formData.value.instance.config.docker.capAdd = result
-        .filter(item => item.value === "add")
-        .map(item => item.label);
+      .filter((item) => item.value === "add")
+      .map((item) => item.label);
     formData.value.instance.config.docker.capDrop = result
-        .filter(item => item.value === "drop")
-        .map(item => item.label);
+      .filter((item) => item.value === "drop")
+      .map((item) => item.label);
   }
-  
+
   if (type === "device" && formData.value?.instance?.config) {
-    const devices = (formData.value.instance.config.docker.devices || []).map(v => {
+    const devices = (formData.value.instance.config.docker.devices || []).map((v) => {
       const tmp = v.split("|");
       return {
         PathOnHost: tmp[0] || "",
@@ -443,14 +445,16 @@ const handleEditDockerConfig = async (type: "port" | "volume" | "env" | "label" 
       };
     });
     const result = await useDockerDeviceEditDialog(devices);
-    const devicesArray = result.map(v => {
-      if (!v.PathOnHost) return "";
-      return !v.PathInContainer && !v.CgroupPermissions
-        ? v.PathOnHost
-        : !v.CgroupPermissions
+    const devicesArray = result
+      .map((v) => {
+        if (!v.PathOnHost) return "";
+        return !v.PathInContainer && !v.CgroupPermissions
+          ? v.PathOnHost
+          : !v.CgroupPermissions
           ? `${v.PathOnHost}|${v.PathInContainer}`
           : `${v.PathOnHost}|${v.PathInContainer}|${v.CgroupPermissions}`;
-    }).filter(Boolean);
+      })
+      .filter(Boolean);
     formData.value.instance.config.docker.devices = devicesArray;
   }
 };
@@ -895,6 +899,7 @@ defineExpose({
               </a-col>
               <a-col :xs="24" :offset="0">
                 <a-form-item>
+                  <!-- Update Command -->
                   <a-typography-title :level="5">{{ t("TXT_CODE_bb0b9711") }}</a-typography-title>
                   <a-typography-paragraph>
                     <a-tooltip :title="UPDATE_CMD_DESCRIPTION" placement="top">
@@ -912,6 +917,15 @@ defineExpose({
                     :placeholder="UPDATE_CMD_TEMPLATE"
                     :disabled="isGlobalTerminal"
                   />
+                  <!-- <DockerImageSelect
+                    v-if="!isGlobalTerminal"
+                    v-model:model-value="formData.instance.config.updateCommandImage"
+                    :daemon-id="daemonId ?? ''"
+                    :title="t('TXT_CODE_6904cb3')"
+                    :description="t('TXT_CODE_update_cmd_no_image')"
+                    :allow-empty="true"
+                    :disabled="isGlobalTerminal"
+                  /> -->
                 </a-form-item>
               </a-col>
               <a-col :xs="24" :lg="6" :offset="0">
@@ -1278,10 +1292,7 @@ defineExpose({
                       {{ t("TXT_CODE_dc47d2aa") }}
                     </a-typography-title>
                     <a-typography-paragraph>
-                      <a-tooltip 
-                        :title="t('TXT_CODE_18437e81')" 
-                        placement="top"
-                      >
+                      <a-tooltip :title="t('TXT_CODE_18437e81')" placement="top">
                         <a-typography-text
                           type="secondary"
                           :class="[!isPhone && 'two-line-height', 'typography-text-ellipsis']"
@@ -1321,7 +1332,7 @@ defineExpose({
                     </a-input-group>
                   </a-form-item>
                 </a-col>
-                
+
                 <a-col :xs="24" :lg="8" :offset="0">
                   <a-form-item>
                     <a-typography-title :level="5">{{ t("TXT_CODE_b3a60c78") }}</a-typography-title>

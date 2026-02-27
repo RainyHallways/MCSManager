@@ -2295,6 +2295,7 @@
   "TXT_CODE_bae487e4": "使用 Docker 镜像创建",
   "TXT_CODE_baseport_title": "基础端口",
   "TXT_CODE_bb0b9711": "更新或安装命令",
+  "TXT_CODE_update_cmd_no_image": "不使用镜像（宿主机执行）",
   "TXT_CODE_bb35dc39": "设为真以便让仙人掌能用骨粉催肥。",
   "TXT_CODE_bb729416": "玩家拾取经验球的延迟时间",
   "TXT_CODE_bb760145": "请填写时间，单位毫秒，1000ms = 1s",

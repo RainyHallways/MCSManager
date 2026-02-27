@@ -2295,6 +2295,7 @@
   "TXT_CODE_bae487e4": "Create with Docker Image",
   "TXT_CODE_baseport_title": "Base Port",
   "TXT_CODE_bb0b9711": "Update or Install Command",
+  "TXT_CODE_update_cmd_no_image": "Do not use image (run on host)",
   "TXT_CODE_bb35dc39": "Set to true to make it so cacti can be bonemealed",
   "TXT_CODE_bb729416": "The delay a player can pick up experience after it is dropped",
   "TXT_CODE_bb760145": "Please enter a time in milliseconds. FYI, 1000ms = 1s",

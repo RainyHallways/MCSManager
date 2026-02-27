@@ -14,6 +14,8 @@ declare global {
     fileCode: string;
     processType: ProcessType;
     updateCommand: string;
+    /** 执行更新命令时使用的 Docker 镜像，留空表示不使用镜像 */
+    updateCommandImage?: string;
     runAs: string;
     actionCommandList: any[];
     crlf: number;
