@@ -43,7 +43,6 @@ export class SetupDockerContainer extends AsyncTask {
   constructor(
     public readonly instance: Instance,
     public readonly startCommand?: string,
-    /** 覆盖使用的镜像（如 updateCommandImage）；未设置时使用 instance.config.docker.image */
     public readonly imageOverride?: string
   ) {
     super();

@@ -14,8 +14,6 @@ declare global {
     fileCode: string;
     processType: ProcessType;
     updateCommand: string;
-    /** 执行更新命令时使用的 Docker 镜像，留空表示不使用镜像 */
-    updateCommandImage?: string;
     runAs: string;
     actionCommandList: any[];
     crlf: number;
@@ -76,6 +74,8 @@ declare global {
   }
 
   interface IGlobalInstanceDockerConfig {
+    /** 执行更新命令时使用的 Docker 镜像，留空表示不使用镜像 */
+    updateCommandImage?: string;
     containerName?: string;
     image?: string;
     memory?: number;

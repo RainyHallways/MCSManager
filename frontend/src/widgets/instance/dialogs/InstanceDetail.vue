@@ -883,10 +883,10 @@ defineExpose({
                   <DockerImageSelect
                     :is-allow-empty="true"
                     :is-allow-text="t('继承运行时镜像')"
-                    :model-value="formData.instance.config?.updateCommandImage ?? ''"
+                    :model-value="formData.instance.config?.docker?.updateCommandImage ?? ''"
                     :image-select-method="formData.instance.imageSelectMethod ?? 'SELECT'"
                     :daemon-id="daemonId ?? ''"
-                    @update:model-value="(v) => (formData.instance.config!.updateCommandImage = v)"
+                    @update:model-value="(v) => (formData.instance.config!.docker!.updateCommandImage = v)"
                     @update:image-select-method="(v) => (formData.instance.imageSelectMethod = v)"
                   />
                 </a-form-item>
