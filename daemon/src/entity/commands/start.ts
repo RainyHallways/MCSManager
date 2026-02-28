@@ -1,3 +1,4 @@
+import fs from "fs-extra";
 import { $t } from "../../i18n";
 import Instance from "../instance/instance";
 import InstanceCommand from "./base/command";
@@ -18,6 +19,11 @@ export default abstract class AbsStartCommand extends InstanceCommand {
   async exec(instance: Instance) {
     if (instance.status() !== Instance.STATUS_STOP)
       return instance.failure(new StartupError($t("TXT_CODE_start.instanceNotDown")));
+
+    // Create the instance directory if it doesn't exist
+    if (!fs.existsSync(instance.absoluteCwdPath())) {
+      await fs.mkdirs(instance.absoluteCwdPath());
+    }
 
     try {
       instance.setLock(true);

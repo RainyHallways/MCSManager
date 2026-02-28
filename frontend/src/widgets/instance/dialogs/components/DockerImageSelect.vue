@@ -15,6 +15,7 @@ const props = defineProps<{
   modelValue: string;
   daemonId?: string;
   isAllowEmpty?: boolean;
+  isAllowText?: string;
 }>();
 
 const emit = defineEmits<{
@@ -32,7 +33,7 @@ const loadImages = async () => {
   loading.value = true;
   dockerImages.value = arrayFilter([
     {
-      label: t("不使用镜像"),
+      label: props.isAllowText ?? t("空"),
       value: "",
       condition: () => props.isAllowEmpty
     },

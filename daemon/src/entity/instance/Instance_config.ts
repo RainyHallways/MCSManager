@@ -21,9 +21,13 @@ export default class InstanceConfig implements IGlobalInstanceConfig {
   public endTime: number = 0;
   public fileCode: string = "utf-8";
   public processType: ProcessType = "general";
+
+  /** The command used for executing the update command */
   public updateCommand: string = "";
-  /** 执行更新命令时使用的 Docker 镜像，留空表示不使用镜像（宿主机执行） */
+  /** The Docker image used for executing the update command,
+   * empty means not using image (host execution) */
   public updateCommandImage: string = "";
+
   public runAs: string = "";
   public crlf = os.platform() === "win32" ? 2 : 1; // 1: \n  2: \r\n
   public category = 0;

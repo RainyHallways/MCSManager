@@ -1,4 +1,5 @@
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
+import fs from "fs-extra";
 import iconv from "iconv-lite";
 import { killProcess } from "mcsmanager-common";
 import { commandStringToArray } from "../entity/commands/base/command_parser";
@@ -35,13 +36,21 @@ export class InstanceUpdateAction extends AsyncTask {
     );
     this.instance.println($t("TXT_CODE_general_update.update"), `${updateCommand}`);
 
-    // Docker Update Command Mode: 优先使用 updateCommandImage，否则当实例为 Docker 模式时使用 docker.image
+    // Docker Update Command Mode: Prefer using updateCommandImage,
+    // otherwise, if the instance is in Docker mode, use docker.image
     const updateImage =
       this.instance.config.updateCommandImage?.trim() ||
       (this.instance.config.processType === "docker" && this.instance.config.docker?.image
         ? this.instance.config.docker.image
         : "");
     if (updateImage) {
+      // Because some accounts inside the container may be different from the account running MCSManager,
+      // not setting permissions to 777 may cause failure to install any files properly.
+      fs.chmod(this.instance.absoluteCwdPath(), 0o777).catch(() => {
+        logger.error(
+          `Failed to chmod the instance directory to 777: ${this.instance.absoluteCwdPath()}`
+        );
+      });
       const imageOverride = this.instance.config.updateCommandImage?.trim() || undefined;
       this.containerWrapper = new SetupDockerContainer(this.instance, updateCommand, imageOverride);
       await this.containerWrapper.start();

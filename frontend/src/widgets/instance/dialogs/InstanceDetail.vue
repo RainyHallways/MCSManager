@@ -868,7 +868,7 @@ defineExpose({
               <a-col :xs="24" :lg="12" :offset="0">
                 <a-form-item>
                   <a-typography-title :level="5">
-                    {{ t("在容器中执行更新命令") }}
+                    {{ t("使用镜像执行更新命令") }}
                   </a-typography-title>
                   <a-typography-paragraph>
                     <a-tooltip
@@ -882,6 +882,7 @@ defineExpose({
                   </a-typography-paragraph>
                   <DockerImageSelect
                     :is-allow-empty="true"
+                    :is-allow-text="t('继承运行时镜像')"
                     :model-value="formData.instance.config?.updateCommandImage ?? ''"
                     :image-select-method="formData.instance.imageSelectMethod ?? 'SELECT'"
                     :daemon-id="daemonId ?? ''"
