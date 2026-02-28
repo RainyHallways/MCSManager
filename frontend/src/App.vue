@@ -7,6 +7,7 @@ import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import AppConfigProvider from "./components/AppConfigProvider.vue";
 import AppSidebarMenu from "./components/AppSidebarMenu.vue";
+import Breadcrumbs from "./components/Breadcrumbs.vue";
 import InputDialogProvider from "./components/InputDialogProvider.vue";
 import MyselfInfoDialog from "./components/MyselfInfoDialog.vue";
 import { closeAppLoading, setLoadingTitle } from "./tools/dom";
@@ -31,10 +32,13 @@ onMounted(async () => {
     <!-- App Container -->
     <div class="global-app-container global-app-container-with-sidebar">
       <aside class="left-sidebar">
-        <AppSidebarMenu />
+        <div class="left-sidebar-menu">
+          <AppSidebarMenu />
+        </div>
       </aside>
       <main class="main-content">
         <!-- <AppHeader /> -->
+        <Breadcrumbs />
         <RouterView :key="$route.fullPath" />
       </main>
       <aside class="right-sidebar"></aside>
@@ -53,12 +57,18 @@ onMounted(async () => {
   gap: 80px;
   min-height: 100vh;
 
-  .left-sidebar {
-    text-align: right;
-    background-color: rgb(201, 201, 201);
-    border-right: 1px solid rgb(155, 155, 155);
+  .left-sidebar-menu {
+    top: 0;
+    align-self: flex-start;
+    position: fixed;
+    width: 240px;
+    min-height: 100vh;
+    // height: 100%;
+    text-align: left;
+    // background-color: rgb(201, 201, 201);
+    border-right: 1px solid var(--color-gray-5);
     background-image: url("@/assets/side.png");
-    padding: 54px 24px;
+    padding: 20px 24px;
   }
 
   .left-sidebar,
@@ -68,7 +78,7 @@ onMounted(async () => {
   }
 
   .main-content {
-    margin-top: 54px;
+    margin-top: 20px;
     flex: 0 1 1300px;
     min-width: 0;
   }

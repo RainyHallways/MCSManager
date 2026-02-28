@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import logo from "@/assets/logo.png";
-import type { RouterMetaInfo } from "@/config/router";
 import { useHeaderMenus } from "@/hooks/useHeaderMenus";
-import { useAppRouters } from "@/hooks/useAppRouters";
 import { useScreen } from "@/hooks/useScreen";
-import { t } from "@/lang/i18n";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
-import { useAppStateStore } from "@/stores/useAppStateStore";
 import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
 import { useScroll } from "@vueuse/core";
 import { computed, h, onMounted } from "vue";
-import { useRoute } from "vue-router";
 import { useLayoutConfigStore } from "../stores/useLayoutConfig";
+import Breadcrumbs from "./Breadcrumbs.vue";
 import CardPanel from "./CardPanel.vue";
 
 const { getSettingsConfig } = useLayoutConfigStore();
 const { containerState } = useLayoutContainerStore();
-const { getRouteParamsUrl } = useAppRouters();
 const { setLogoImage, logoImage } = useAppConfigStore();
-const { state: appState } = useAppStateStore();
 
 const { menus, appMenus, handleToPage } = useHeaderMenus();
 
@@ -44,41 +38,6 @@ const headerStyle = computed(() => {
   return {
     "--header-height": isScroll.value ? "60px" : "64px"
   };
-});
-
-const route = useRoute();
-
-const breadcrumbs = computed(() => {
-  const arr = [
-    {
-      title: t("TXT_CODE_f5b9d58f"),
-      disabled: false,
-      href: `.`
-    }
-  ];
-
-  const queryUrl = getRouteParamsUrl();
-
-  if (route.meta.breadcrumbs instanceof Array) {
-    const meta = route.meta as RouterMetaInfo;
-    meta.breadcrumbs?.forEach((v) => {
-      const params = queryUrl && !v.mainMenu ? `?${queryUrl}` : "";
-      if ((appState.userInfo?.permission || 0) < v.permission) return;
-      arr.push({
-        title: v.name,
-        disabled: false,
-        href: `./#${v.path}${params}`
-      });
-    });
-  }
-
-  arr.push({
-    title: String(route.name),
-    disabled: true,
-    href: `./#${route.fullPath}`
-  });
-
-  return arr;
 });
 
 const { isPhone } = useScreen();
@@ -216,14 +175,7 @@ const openPhoneMenu = (b = false) => {
     </div>
   </a-drawer>
 
-  <div class="breadcrumbs">
-    <a-breadcrumb>
-      <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.title">
-        <a v-if="!item.disabled" :href="item.href">{{ item.title }}</a>
-        <span v-else>{{ item.title }}</span>
-      </a-breadcrumb-item>
-    </a-breadcrumb>
-  </div>
+  <Breadcrumbs />
 </template>
 
 <style lang="scss" scoped>
@@ -278,14 +230,6 @@ const openPhoneMenu = (b = false) => {
   .phone-nav-button * {
     margin: 0px 6px;
   }
-}
-
-.breadcrumbs {
-  font-size: 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0px;
 }
 
 .app-header-wrapper {

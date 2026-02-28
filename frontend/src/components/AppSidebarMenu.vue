@@ -58,7 +58,7 @@ const { logoImage } = useAppConfigStore();
     <div>
       <a href=".">
         <div class="logo">
-          <img :src="logoImage" style="height: 20px" />
+          <img :src="logoImage" style="height: 18px" />
         </div>
       </a>
     </div>
@@ -117,8 +117,9 @@ const { logoImage } = useAppConfigStore();
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  align-items: end;
-  padding: 12px 0;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 14px 0;
   color: rgba(255, 255, 255, 0.85);
   min-height: 100%;
 }
@@ -132,8 +133,8 @@ const { logoImage } = useAppConfigStore();
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 32px 12px 32px;
+  gap: 10px;
+  padding: 12px 32px 12px 20px;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
