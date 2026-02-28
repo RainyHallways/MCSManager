@@ -1,0 +1,395 @@
+{
+  "languages": [
+    {
+      "label": "English",
+      "value": "en_us"
+    }
+  ],
+  "packages": [
+    {
+      "title": "Squad Docker Server",
+      "language": "en_us",
+      "platform": "Linux",
+      "description": "use the official Docker image of Squad Server to quickly get started!",
+      "image": "https://squadovo.cn/img/header.jpg",
+      "gameType": "Squad",
+      "category": "Latest Version",
+      "runtime": "Linux",
+      "hardware": "Intel Core platform、RAM 8G+",
+      "size": "",
+      "targetLink": "",
+      "author": "MCSManager",
+      "tags": [
+        "Docker version"
+      ],
+      "setupInfo": {
+        "startCommand": "./SquadGameServer.sh",
+        "stopCommand": "^C",
+        "updateCommand": "/home/steam/steamcmd/steamcmd.sh -net_ipv4 +force_install_dir \"/data\" +login anonymous \"+app_update 403240 validate\" +quit",
+        "ie": "utf8",
+        "oe": "utf8",
+        "type": "steam/universal",
+        "tag": [
+          "Squad"
+        ],
+        "fileCode": "utf8",
+        "processType": "docker",
+        "runAs": "steam",
+        "docker": {
+          "image": "githubyumao/steam-game-runtime:latest",
+          "updateCommandImage": "githubyumao/steam-game-runtime:latest",
+          "ports": [
+            "{mcsm_port1}:7787/udp",
+            "{mcsm_port2}:15000/udp"
+          ],
+          "changeWorkdir": true,
+          "workingDir": "/data",
+          "env": [],
+          "extraVolumes": []
+        }
+      }
+    },
+    {
+      "title": "Rust Docker Server",
+      "language": "en_us",
+      "platform": "Linux",
+      "description": "Use Rust third-party Docker images to quickly get started!",
+      "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/rust.jpg",
+      "gameType": "Rust",
+      "category": "Latest Version",
+      "runtime": "Windows/Linux",
+      "hardware": "Intel Core platform、RAM 16G+",
+      "size": "",
+      "targetLink": "",
+      "author": "南赛",
+      "tags": [
+        "Commercial Use Allowed",
+        "Docker version"
+      ],
+      "setupInfo": {
+        "startCommand": "",
+        "stopCommand": "docker stop rust-server",
+        "ie": "utf8",
+        "oe": "utf8",
+        "type": "steam/universal",
+        "tag": [
+          "Rust"
+        ],
+        "fileCode": "utf8",
+        "processType": "docker",
+        "updateCommand": "docker restart rust-server",
+        "docker": {
+          "image": "didstopia/rust-server",
+          "ports": [
+            "{mcsm_port1}:28015/udp",
+            "{mcsm_port2}:28016/udp"
+          ],
+          "extraVolumes": [
+            "{mcsm_workspace}/server|/server",
+            "{mcsm_workspace}/config|/app/.config/unity3d/Facepunch/Rust",
+            "{mcsm_workspace}/data|/data"
+          ],
+          "workingDir": "",
+          "env": [],
+          "changeWorkdir": false
+        }
+      }
+    },
+    {
+      "title": "Factorio Docker Server",
+      "language": "en_us",
+      "platform": "Linux",
+      "description": "Use Factorio third-party Docker images to quickly get started!",
+      "image": "https://cdn.factorio.com/assets/img/web/factorio-logo2.png",
+      "gameType": "Factorio",
+      "category": "Latest Version",
+      "runtime": "Windows/Linux",
+      "hardware": "X86_64、RAM 4G+",
+      "size": "",
+      "targetLink": "",
+      "author": "TPing",
+      "tags": [
+        "Docker version"
+      ],
+      "setupInfo": {
+        "startCommand": "",
+        "stopCommand": "^C",
+        "ie": "utf8",
+        "oe": "utf8",
+        "type": "steam/universal",
+        "tag": [
+          "Factorio"
+        ],
+        "fileCode": "utf8",
+        "processType": "docker",
+        "updateCommand": "",
+        "docker": {
+          "image": "factoriotools/factorio:latest",
+          "ports": [
+            "{mcsm_port1}:34197/udp"
+          ],
+          "extraVolumes": [],
+          "workingDir": "/factorio",
+          "env": [],
+          "changeWorkdir": false
+        }
+      }
+    },
+    {
+      "platform": "Linux",
+      "language": "en_us",
+      "image": "https://hytale.com/static/images/logo.png",
+      "gameType": "Hytale",
+      "description": "Hytale Quick Server Setup, Mod Support",
+      "title": "Hytale Server",
+      "category": "hytale",
+      "runtime": "Java 25+",
+      "hardware": "RAM 4G+",
+      "targetLink": "https://github.com/SkyKingPX/Hytale-Server-Installer/releases/download/1.0.0/hytale-server-installer-linux-mcsm.zip",
+      "author": "SkyKing_PX",
+      "setupInfo": {
+        "type": "hytale",
+        "startCommand": "java -Xms2G -Xmx4G -XX:AOTCache=HytaleServer.aot -jar HytaleServer.jar --assets Assets.zip",
+        "stopCommand": "stop",
+        "updateCommand": "sudo ./hytale-server-installer-linux",
+        "ie": "UTF-8",
+        "oe": "UTF-8"
+      }
+    },
+    {
+      "title": "Terraria Server",
+      "language": "en_us",
+      "platform": "Linux",
+      "description": "For Linux systems, using a third-party Docker image of Terraria for quick server deployment!",
+      "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/terraria.webp",
+      "gameType": "Terraria",
+      "category": "Latest Version",
+      "runtime": "Ubuntu/Centos LTS",
+      "hardware": "RAM 8G+",
+      "size": "",
+      "targetLink": "",
+      "author": "MCSManager",
+      "tags": [
+        "Docker version"
+      ],
+      "setupInfo": {
+        "startCommand": "",
+        "stopCommand": "exit",
+        "ie": "utf8",
+        "oe": "utf8",
+        "type": "steam/terraria",
+        "tag": [
+          "terraria"
+        ],
+        "fileCode": "utf8",
+        "processType": "docker",
+        "updateCommand": "",
+        "docker": {
+          "image": "ryshe/terraria:latest",
+          "ports": [
+            "{mcsm_port1}:7777/tcp"
+          ],
+          "extraVolumes": [],
+          "workingDir": "/root/.local/share/Terraria/Worlds",
+          "env": [],
+          "changeWorkdir": false
+        }
+      }
+    },
+    {
+      "title": "Palworld Official Server",
+      "language": "en_us",
+      "platform": "Linux",
+      "description": "This template uses Docker for installation. Docker must be installed on your Linux server! The default password after installation is 123456. To change it, please go to the environment variables.",
+      "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/palworld.webp",
+      "gameType": "Palworld",
+      "category": "Latest Version",
+      "runtime": "Ubuntu/Centos LTS",
+      "hardware": "RAM 8G+",
+      "size": "",
+      "targetLink": "",
+      "author": "MCSManager",
+      "tags": [
+        "Docker version"
+      ],
+      "setupInfo": {
+        "stopCommand": "stop",
+        "ie": "utf8",
+        "oe": "utf8",
+        "type": "steam/universal",
+        "tag": [
+          "Palworld"
+        ],
+        "fileCode": "utf8",
+        "processType": "docker",
+        "updateCommand": "",
+        "docker": {
+          "image": "kagurazakanyaa/palworld:latest",
+          "changeWorkdir": false,
+          "networkMode": "bridge",
+          "workingDir": "/opt/palworld/Pal/Saved",
+          "ports": [
+            "{mcsm_port1}:8211/tcp",
+            "{mcsm_port2}:25575/tcp"
+          ],
+          "env": [
+            "SERVER_NAME=Private PalWorld Server",
+            "SERVER_DESC=Private PalWorld Server",
+            "ADMIN_PASSWORD=123456"
+          ]
+        }
+      }
+    },
+    {
+      "title": "Project Zomboid",
+      "title-zh": "僵尸毁灭工程",
+      "language": "en_us",
+      "platform": "Linux",
+      "description": "For Linux systems, using a third-party Docker image of Project Zomboid for quick server deployment!",
+      "description-zh": "适用于 Linux 系统，使用第三方 Docker 镜像的 Project Zomboid 快速部署服务器！",
+      "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/pzomboid.webp",
+      "gameType": "Zombie Survival",
+      "category": "Latest Version",
+      "runtime": "Ubuntu/Centos LTS",
+      "hardware": "RAM 8G+",
+      "size": "",
+      "targetLink": "",
+      "author": "MCSManager",
+      "tags": [
+        "Docker version"
+      ],
+      "setupInfo": {
+        "startCommand": "",
+        "stopCommand": "stop",
+        "ie": "utf8",
+        "oe": "utf8",
+        "type": "steam/universal",
+        "tag": [
+          "Project Zomboid"
+        ],
+        "fileCode": "utf8",
+        "processType": "docker",
+        "updateCommand": "",
+        "docker": {
+          "image": "renegademaster/zomboid-dedicated-server:latest",
+          "ports": [
+            "{mcsm_port2}:16262/udp",
+            "{mcsm_port1}:16261/udp"
+          ],
+          "extraVolumes": [
+            "{mcsm_workspace}/ZomboidConfig|/home/steam/Zomboid",
+            "{mcsm_workspace}/ZomboidDedicatedServer|/home/steam/ZomboidDedicatedServer"
+          ],
+          "workingDir": "",
+          "env": [],
+          "changeWorkdir": false
+        }
+      }
+    },
+    {
+      "title": "Sons Of The Forest Official Server",
+      "language": "en_us",
+      "platform": "Windows",
+      "description": "Sons Of The Forest Server for Windows system.",
+      "image": "https://shared.cdn.queniuqe.com/store_item_assets/steam/apps/1326470/header.jpg?t=1708624856",
+      "remark": "Please allow port 8766 (UDP) 27016 (UDP) 9700 (UDP) to pass through the firewall.",
+      "gameType": "Sons Of The Forest",
+      "category": "latest",
+      "runtime": "Windows 10+",
+      "hardware": "RAM 8G+",
+      "size": "3.5GB",
+      "targetLink": "",
+      "author": "mmyddd",
+      "tags": [
+        "Windows version"
+      ],
+      "setupInfo": {
+        "tag": [
+          "SonsOfTheForest"
+        ],
+        "type": "steam/universal",
+        "startCommand": "echo|set /p=\"1326470\" > steam_appid.txt & set SteamAppId=1326470 && set SteamGameId=1326470 && SonsOfTheForestDS.exe -userdatapath \"{mcsm_workspace}/userdata\" | consoleparser -colorize",
+        "stopCommand": "^C",
+        "updateCommand": "{mcsm_steamcmd} +login anonymous +force_install_dir \"{mcsm_workspace}\" +app_update 2465200 +quit",
+        "ie": "utf-8",
+        "oe": "utf-8"
+      }
+    },
+    {
+      "title": "SCP:SL Official Server",
+      "language": "en_us",
+      "platform": "Windows",
+      "description": "SCP:SL Official Server for Windows",
+      "image": "https://shared.cdn.queniuqe.com/store_item_assets/steam/apps/700330/dad38399643cda1a4084b1faff60452427bef8c0/header.jpg?t=1747606719",
+      "remark": "The first startup requires configuration in the console.Server Config Path:%APPDATA%/SCP Secret Laboratory/config/{port}",
+      "gameType": "SCP:SL",
+      "category": "latest",
+      "runtime": "Windows 10+",
+      "hardware": "RAM 8G+",
+      "size": "1GB",
+      "targetLink": "",
+      "author": "mmyddd",
+      "tags": [
+        "Windows version"
+      ],
+      "setupInfo": {
+        "tag": [
+          "SCP:SL"
+        ],
+        "type": "steam/universal",
+        "startCommand": "LocalAdmin.exe",
+        "stopCommand": "stop",
+        "updateCommand": "{mcsm_steamcmd} +login anonymous +force_install_dir \"{mcsm_workspace}\" +app_update 996560 +quit",
+        "ie": "utf-8",
+        "oe": "utf-8"
+      }
+    },
+    {
+      "title": "Squad Server",
+      "title-zh": "Squad Server",
+      "language": "en_us",
+      "platform": "Windows",
+      "description": "Squad Server suitable for Windows system, fast server setup",
+      "description-zh": "Squad 服务器适合 Windows 系统，快速服务器搭建",
+      "image": "https://squadovo.cn/img/header.jpg",
+      "gameType": "Squad",
+      "category": "Latest Version",
+      "runtime": "Windows Server",
+      "hardware": "Intel Core platform、RAM 8G+",
+      "size": "20GB",
+      "author": "NanSai",
+      "tags": [],
+      "remark": "Need to install Visual C++",
+      "targetLink": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/steamcmd.exe",
+      "setupInfo": {
+        "type": "steam/universal",
+        "startCommand": "\"SquadGame/Binaries/Win64/SquadGameServer.exe\" Port=7787 QueryPort=15000 -log",
+        "stopCommand": "^C",
+        "updateCommand": "steamcmd.exe +login anonymous +force_install_dir \"{mcsm_workspace}\" +app_update 403240 validate +quit",
+        "ie": "utf-8",
+        "oe": "utf-8"
+      }
+    },
+    {
+      "platform": "Windows",
+      "language": "en_us",
+      "image": "https://hytale.com/static/images/logo.png",
+      "gameType": "Hytale",
+      "description": "Hytale Quick Server Setup, Mod Support",
+      "title": "Hytale Server",
+      "category": "hytale",
+      "runtime": "Java 25+",
+      "hardware": "RAM 4G+",
+      "targetLink": "https://github.com/SkyKingPX/Hytale-Server-Installer/releases/download/1.0.0/hytale-server-installer-win-mcsm.zip",
+      "author": "SkyKing_PX",
+      "setupInfo": {
+        "type": "hytale",
+        "startCommand": "java -Xms2G -Xmx4G -XX:AOTCache=HytaleServer.aot -jar HytaleServer.jar --assets Assets.zip",
+        "stopCommand": "stop",
+        "updateCommand": ".\\hytale-server-installer-win.exe",
+        "ie": "UTF-8",
+        "oe": "UTF-8"
+      }
+    }
+  ]
+}
