@@ -53,12 +53,12 @@
       "title": "Rust Docker Server",
       "language": "en_us",
       "platform": "Linux",
-      "description": "Use Rust third-party Docker images to quickly get started!",
+      "description": "Use the steam-game-runtime Docker image and SteamCMD to run Rust Dedicated Server.",
       "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/rust.jpg",
       "gameType": "Rust",
       "category": "Latest Version",
-      "runtime": "Windows/Linux",
-      "hardware": "Intel Core platform、RAM 16G+",
+      "runtime": "Linux",
+      "hardware": "",
       "size": "",
       "targetLink": "",
       "author": "南赛",
@@ -67,8 +67,9 @@
         "Docker version"
       ],
       "setupInfo": {
-        "startCommand": "",
-        "stopCommand": "docker stop rust-server",
+        "startCommand": "./RustDedicated -batchmode -nographics +server.port 28015 +rcon.port 28016",
+        "stopCommand": "^C",
+        "updateCommand": "/home/steam/steamcmd/steamcmd.sh -net_ipv4 +force_install_dir \"/data\" +login anonymous \"+app_update 258550 validate\" +quit",
         "ie": "utf8",
         "oe": "utf8",
         "type": "steam/universal",
@@ -77,21 +78,18 @@
         ],
         "fileCode": "utf8",
         "processType": "docker",
-        "updateCommand": "docker restart rust-server",
+        "runAs": "steam",
         "docker": {
-          "image": "didstopia/rust-server",
+          "image": "githubyumao/steam-game-runtime:latest",
+          "updateCommandImage": "githubyumao/steam-game-runtime:latest",
           "ports": [
             "{mcsm_port1}:28015/udp",
             "{mcsm_port2}:28016/udp"
           ],
-          "extraVolumes": [
-            "{mcsm_workspace}/server|/server",
-            "{mcsm_workspace}/config|/app/.config/unity3d/Facepunch/Rust",
-            "{mcsm_workspace}/data|/data"
-          ],
-          "workingDir": "",
+          "changeWorkdir": true,
+          "workingDir": "/data",
           "env": [],
-          "changeWorkdir": false
+          "extraVolumes": []
         }
       }
     },
