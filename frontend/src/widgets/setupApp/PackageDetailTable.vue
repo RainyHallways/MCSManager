@@ -4,6 +4,7 @@ import type { QuickStartPackages } from "@/types";
 import type { AntTableCell } from "@/types/ant";
 import { DownloadOutlined } from "@ant-design/icons-vue";
 import { Flex } from "ant-design-vue";
+import { computed, ref } from "vue";
 import type { PackageTableColumnDef } from "./usePackageTableColumns";
 import { usePackageTableColumns } from "./usePackageTableColumns";
 
@@ -20,6 +21,29 @@ const emit = defineEmits<{
 }>();
 
 const { columns, columnDefs } = usePackageTableColumns();
+
+const configModalVisible = ref(false);
+const configModalRecord = ref<QuickStartPackages | null>(null);
+
+const configModalJson = computed(() => {
+  const record = configModalRecord.value;
+  if (!record) return "";
+  try {
+    return JSON.stringify(record, null, 2);
+  } catch {
+    return String(record);
+  }
+});
+
+function openConfigModal(record: QuickStartPackages) {
+  configModalRecord.value = record;
+  configModalVisible.value = true;
+}
+
+function closeConfigModal() {
+  configModalVisible.value = false;
+  configModalRecord.value = null;
+}
 
 function getColumnDef(key: string): PackageTableColumnDef | undefined {
   return columnDefs.value.find((c) => c.key === key);
@@ -106,7 +130,8 @@ function platformDisplayText(platform: string): string {
       <template
         v-else-if="['runtime', 'hardware', 'platform', 'tags'].includes(String(column.key))"
       >
-        <div class="ml-8">
+        <div v-if="!getCellText(record, String(column.dataIndex))"></div>
+        <div v-else class="ml-8">
           <a-tag color="blue">{{ getCellText(record, String(column.dataIndex)) }}</a-tag>
         </div>
       </template>
@@ -118,12 +143,17 @@ function platformDisplayText(platform: string): string {
 
       <!-- Action column -->
       <template v-else-if="column.key === 'action'">
-        <a-button type="primary" size="small" @click="emit('select', record)">
-          <template #icon>
-            <DownloadOutlined />
-          </template>
-          {{ btnText || t("TXT_CODE_1704ea49") }}
-        </a-button>
+        <Flex gap="small" align="center" justify="center">
+          <a-button type="link" size="small" @click="openConfigModal(record)">
+            {{ t("查看配置") }}
+          </a-button>
+          <a-button type="primary" size="small" @click="emit('select', record)">
+            <template #icon>
+              <DownloadOutlined />
+            </template>
+            {{ btnText || t("TXT_CODE_1704ea49") }}
+          </a-button>
+        </Flex>
       </template>
 
       <!-- Text column: ellipsis with full text on hover -->
@@ -139,6 +169,19 @@ function platformDisplayText(platform: string): string {
       </template>
     </template>
   </a-table>
+
+  <a-modal
+    v-model:open="configModalVisible"
+    :title="t('查看配置')"
+    width="900px"
+    :footer="null"
+    destroy-on-close
+    @cancel="closeConfigModal"
+  >
+    <div class="config-modal-body">
+      <pre class="config-modal-json"><code>{{ configModalJson }}</code></pre>
+    </div>
+  </a-modal>
 </template>
 
 <style scoped>
@@ -184,5 +227,22 @@ function platformDisplayText(platform: string): string {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+}
+
+.config-modal-body {
+  max-height: 70vh;
+  overflow: auto;
+}
+.config-modal-json {
+  margin: 0;
+  padding: 12px;
+  background: var(--color-gray-2);
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+  /* white-space: pre-wrap;
+  word-break: break-all; */
+  color: var(--color-gray-12);
 }
 </style>

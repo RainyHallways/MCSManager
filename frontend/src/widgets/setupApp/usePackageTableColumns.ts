@@ -48,9 +48,17 @@ function buildColumnDefs(): PackageTableColumnDef[] {
       key: "platform",
       dataIndex: "platform",
       title: t("系统要求"),
-      width: 100,
+      width: 90,
       align: "center",
       useTag: true
+    },
+    {
+      key: "runtime",
+      dataIndex: "runtime",
+      title: t("运行环境"),
+      width: 90,
+      maxWidth: 180,
+      align: "center"
     },
     {
       key: "tags",
@@ -80,8 +88,7 @@ function buildColumnDefs(): PackageTableColumnDef[] {
       dataIndex: "action",
       title: t("TXT_CODE_fe731dfc"),
       width: 100,
-      align: "center",
-      fixed: "right"
+      align: "center"
     }
   ];
 }
