@@ -138,19 +138,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
       });
       filteredPackages = Array.from(map.values());
     }
-    filteredPackages = filteredPackages.map((item: any) => {
-      return {
-        ...item,
-        description: item[`description-${myLanguage}`] || item.description,
-        title: item[`title-${myLanguage}`] || item.title,
-        remark: item[`remark-${myLanguage}`] || item.remark,
-        tags: item[`tags-${myLanguage}`] || item.tags,
-        author: item[`author-${myLanguage}`] || item.author,
-        platform: item[`platform-${myLanguage}`] || item.platform,
-        category: item[`category-${myLanguage}`] || item.category,
-        runtime: item[`runtime-${myLanguage}`] || item.runtime
-      };
-    });
+
     return filteredPackages;
   };
 

@@ -24,6 +24,7 @@ const { columns, columnDefs } = usePackageTableColumns();
 
 const configModalVisible = ref(false);
 const configModalRecord = ref<QuickStartPackages | null>(null);
+const myLanguage = ref(window.navigator.language.split("-")[0]);
 
 const configModalJson = computed(() => {
   const record = configModalRecord.value;
@@ -104,7 +105,7 @@ function platformDisplayText(platform: string): string {
         <div>
           <Flex>
             <a-typography-text style="font-size: 13px; font-weight: 600">
-              {{ record.title }}
+              {{ record[`title-${myLanguage}`] || record.title }}
             </a-typography-text>
             <a-tag v-if="record?.setupInfo?.docker?.image" color="cyan" class="ml-8">
               {{ record?.setupInfo?.docker?.image }}
@@ -112,7 +113,7 @@ function platformDisplayText(platform: string): string {
           </Flex>
           <a-tooltip :title="record.description" placement="topLeft">
             <a-typography-text type="secondary" class="package-table-description-cell">
-              {{ record.description }}
+              {{ record[`description-${myLanguage}`] || record.description }}
             </a-typography-text>
           </a-tooltip>
         </div>
@@ -121,7 +122,7 @@ function platformDisplayText(platform: string): string {
       <template v-else-if="column.key === 'remark'">
         <a-tooltip :title="record.remark || '—'" placement="topLeft">
           <a-typography-text type="secondary" class="package-table-description-cell">
-            {{ record.remark }}
+            {{ record[`remark-${myLanguage}`] || record.remark }}
           </a-typography-text>
         </a-tooltip>
       </template>
