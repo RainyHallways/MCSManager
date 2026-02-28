@@ -113,8 +113,16 @@ defineExpose({
     </template>
 
     <!-- Category view: card grid -->
-    <fade-up-animation v-else>
-      <a-col v-for="item in appList" :key="item.key" :span="24" :sm="24" :md="12" :lg="8">
+    <fade-up-animation v-else :delay="60">
+      <a-col
+        v-for="(item, index) in appList"
+        :key="item.key"
+        :data-index="index"
+        :span="24"
+        :sm="24"
+        :md="12"
+        :lg="8"
+      >
         <div
           class="package-image-container-summary global-card-container-shadow"
           style="overflow: hidden; cursor: pointer"

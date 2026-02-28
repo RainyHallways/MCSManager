@@ -84,7 +84,6 @@ declare module 'vue' {
     DataStatistic: typeof import('./src/components/DataStatistic.vue')['default']
     DockerCapabilityDialog: typeof import('./src/components/fc/DockerCapabilityDialog.vue')['default']
     DockerDeviceDialog: typeof import('./src/components/fc/DockerDeviceDialog.vue')['default']
-    DockerImageSelect: typeof import('./src/components/fc/DockerImageSelect.vue')['default']
     DockerPortDialog: typeof import('./src/components/fc/DockerPortDialog.vue')['default']
     DownloadFileDialog: typeof import('./src/components/fc/DownloadFileDialog.vue')['default']
     DownloadJavaDialog: typeof import('./src/components/fc/DownloadJavaDialog.vue')['default']
