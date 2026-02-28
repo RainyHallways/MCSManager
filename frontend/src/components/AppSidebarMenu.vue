@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { useHeaderMenus } from "@/hooks/useHeaderMenus";
+import {
+  useHeaderMenus,
+  type SidebarAppDropdownEntry,
+  type SidebarEntry
+} from "@/hooks/useHeaderMenus";
+import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import {
   ApartmentOutlined,
   AppstoreOutlined,
@@ -16,7 +21,7 @@ import {
 import type { Key } from "ant-design-vue/es/table/interface";
 import type { Component } from "vue";
 
-const { menus, appMenus, handleToPage } = useHeaderMenus();
+const { sidebarItems, handleToPage } = useHeaderMenus();
 
 /** 路由 path 对应的侧边栏图标 */
 const routePathIcons: Record<string, Component> = {
@@ -36,68 +41,67 @@ const getRouteIcon = (path: string): Component => {
   return routePathIcons[path] ?? MenuOutlined;
 };
 
-const onRouteClick = (path: string) => {
-  handleToPage(path);
+const getItemKey = (entry: SidebarEntry, index: number): string => {
+  if (entry.type === "divider") return "sidebar-divider";
+  if (entry.type === "route") return entry.path;
+  return `app-${index}-${entry.title}`;
 };
 
-type AppMenuItem = (typeof appMenus.value)[number];
-
-const onAppMenuClick = (item: AppMenuItem, key?: Key) => {
-  if (item.menus && key !== undefined) {
-    item.click(String(key));
-  } else if (!item.menus) {
-    (item.click as () => void)();
-  }
+const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) => {
+  item.click(String(info.key));
 };
-
-const onMenuClick = (item: AppMenuItem, info: { key: Key }) => {
-  onAppMenuClick(item, info.key);
-};
+const { logoImage } = useAppConfigStore();
 </script>
 
 <template>
   <nav class="sidebar-menu">
-    <!-- 路由菜单 -->
-    <div class="sidebar-menu-section">
-      <a
-        v-for="item in menus"
-        :key="item.path"
-        class="sidebar-item"
-        :class="item.customClass"
-        @click.prevent="onRouteClick(item.path)"
-      >
-        <component :is="getRouteIcon(item.path)" class="sidebar-item-icon" />
-        <span class="sidebar-item-text">{{ item.name }}</span>
+    <div>
+      <a href=".">
+        <div class="logo">
+          <img :src="logoImage" style="height: 20px" />
+        </div>
       </a>
     </div>
-
-    <!-- 分隔行 -->
-    <div class="sidebar-divider" />
-
-    <!-- 应用菜单 appMenus -->
     <div class="sidebar-menu-section">
-      <template v-for="(item, index) in appMenus" :key="index">
-        <a-dropdown v-if="item.menus && item.conditions" trigger="click" placement="topRight">
+      <template v-for="(entry, index) in sidebarItems" :key="getItemKey(entry, index)">
+        <!-- 分隔线 -->
+        <div v-if="entry.type === 'divider'" class="sidebar-divider" />
+
+        <!-- 路由链接 -->
+        <a
+          v-else-if="entry.type === 'route'"
+          class="sidebar-item"
+          :class="entry.customClass"
+          @click.prevent="handleToPage(entry.path)"
+        >
+          <component :is="getRouteIcon(entry.path)" class="sidebar-item-icon" />
+          <span class="sidebar-item-text">{{ entry.name }}</span>
+        </a>
+
+        <!-- 应用菜单（下拉） -->
+        <a-dropdown v-else-if="entry.type === 'app-dropdown'" trigger="click" placement="topRight">
           <a class="sidebar-item" @click.prevent>
-            <component :is="item.icon" v-if="item.icon" class="sidebar-item-icon" />
-            <span class="sidebar-item-text">{{ item.title }}</span>
+            <component :is="entry.icon" v-if="entry.icon" class="sidebar-item-icon" />
+            <span class="sidebar-item-text">{{ entry.title }}</span>
           </a>
           <template #overlay>
-            <a-menu @click="(info) => onMenuClick(item, info)">
-              <a-menu-item v-for="m in item.menus" :key="String(m.value)">
+            <a-menu @click="(info) => onAppDropdownClick(entry, info)">
+              <a-menu-item v-for="m in entry.menus" :key="String(m.value)">
                 {{ m.title }}
               </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
+
+        <!-- 应用菜单（单点） -->
         <a
-          v-else-if="item.conditions"
+          v-else-if="entry.type === 'app'"
           class="sidebar-item"
-          :class="item.customClass"
-          @click.prevent="onAppMenuClick(item)"
+          :class="entry.customClass"
+          @click.prevent="entry.click()"
         >
-          <component :is="item.icon" v-if="item.icon" class="sidebar-item-icon" />
-          <span class="sidebar-item-text">{{ item.title }}</span>
+          <component :is="entry.icon" v-if="entry.icon" class="sidebar-item-icon" />
+          <span class="sidebar-item-text">{{ entry.title }}</span>
         </a>
       </template>
     </div>
@@ -105,6 +109,11 @@ const onMenuClick = (item: AppMenuItem, info: { key: Key }) => {
 </template>
 
 <style lang="scss" scoped>
+.logo {
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+
 .sidebar-menu {
   display: flex;
   flex-direction: column;
@@ -117,23 +126,23 @@ const onMenuClick = (item: AppMenuItem, info: { key: Key }) => {
 .sidebar-menu-section {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
+  gap: 16px;
+  padding: 12px 32px 12px 32px;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
   border-radius: 6px;
-  transition: background-color 0.2s ease;
+  transition: all 0.4s ease;
   margin: 0 8px;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.178);
   }
 
   .sidebar-item-icon {

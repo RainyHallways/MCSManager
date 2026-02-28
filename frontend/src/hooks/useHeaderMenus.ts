@@ -5,8 +5,8 @@ import { logoutUser } from "@/services/apis/index";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useAppStateStore } from "@/stores/useAppStateStore";
 import { useAppToolsStore } from "@/stores/useAppToolsStore";
-import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import { useLayoutConfigStore } from "@/stores/useLayoutConfig";
+import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import { AppTheme } from "@/types/const";
 import {
   AppstoreAddOutlined,
@@ -21,7 +21,46 @@ import {
   UserOutlined
 } from "@ant-design/icons-vue";
 import { message, Modal, notification } from "ant-design-vue";
+import type { Component } from "vue";
 import { computed } from "vue";
+
+/** 侧边栏单项：分隔线 */
+export type SidebarDividerEntry = { type: "divider" };
+
+/** 侧边栏单项：路由链接 */
+export type SidebarRouteEntry = {
+  type: "route";
+  path: string;
+  name: string | symbol | undefined;
+  customClass?: string[];
+};
+
+/** 侧边栏单项：应用菜单（无子菜单） */
+export type SidebarAppEntry = {
+  type: "app";
+  title: string;
+  icon?: Component;
+  customClass?: string[];
+  click: () => void;
+};
+
+/** 侧边栏单项：应用菜单（有子菜单下拉） */
+export type SidebarAppDropdownEntry = {
+  type: "app-dropdown";
+  title: string;
+  icon?: Component;
+  customClass?: string[];
+  menus: { value: string | number; title: string }[];
+  // 参数名仅用于类型语义，overlay 中会传入 key
+  // eslint-disable-next-line no-unused-vars -- 类型声明中的形参
+  click: (menuKey: string) => void;
+};
+
+export type SidebarEntry =
+  | SidebarDividerEntry
+  | SidebarRouteEntry
+  | SidebarAppEntry
+  | SidebarAppDropdownEntry;
 
 export function useHeaderMenus() {
   const { saveGlobalLayoutConfig, resetGlobalLayoutConfig } = useLayoutConfigStore();
@@ -222,5 +261,39 @@ export function useHeaderMenus() {
     ];
   });
 
-  return { menus, appMenus, handleToPage };
+  /** 侧边栏统一配置：路由菜单 + 分隔线 + 应用菜单，由同一套模板循环渲染 */
+  const sidebarItems = computed((): SidebarEntry[] => {
+    const routeEntries: SidebarRouteEntry[] = menus.value.map((r) => ({
+      type: "route",
+      path: r.path,
+      name: r.name,
+      customClass: Array.isArray(r.customClass) ? r.customClass : []
+    }));
+    const divider: SidebarDividerEntry = { type: "divider" };
+    const appEntries: (SidebarAppEntry | SidebarAppDropdownEntry)[] = appMenus.value
+      .filter((item) => item.conditions)
+      .map((item) => {
+        if (item.menus && item.menus.length > 0) {
+          return {
+            type: "app-dropdown" as const,
+            title: item.title,
+            icon: item.icon,
+            customClass: item.customClass,
+            menus: item.menus,
+            // eslint-disable-next-line no-unused-vars -- 类型断言中的形参名
+            click: item.click as (menuKey: string) => void
+          };
+        }
+        return {
+          type: "app" as const,
+          title: item.title,
+          icon: item.icon,
+          customClass: item.customClass,
+          click: item.click as () => void
+        };
+      });
+    return [...routeEntries, divider, ...appEntries];
+  });
+
+  return { menus, appMenus, sidebarItems, handleToPage };
 }

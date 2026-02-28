@@ -50,7 +50,7 @@ onMounted(async () => {
 .global-app-container-with-sidebar {
   display: flex;
   flex-wrap: nowrap;
-  gap: 24px;
+  gap: 80px;
   min-height: 100vh;
 
   .left-sidebar {
