@@ -23,14 +23,6 @@ const {
   searchForm,
   appListLoading,
   filteredList: appList,
-  languageOptions: appLangList,
-  gameTypeOptions: appGameTypeList,
-  categoryOptions: appCategoryList,
-  platformOptions: appPlatformList,
-  handleReset,
-  handleGameTypeChange,
-  handleLanguageChange,
-  handlePlatformChange,
   handleSelectTopCategory,
   fetchTemplate
 } = useMarketPackages({
@@ -104,7 +96,7 @@ defineExpose({
     <!-- Detail list: table with back-to-category -->
     <template v-else-if="detailList.length > 0">
       <a-col :span="24">
-        <a-button type="text" class="mb-3" @click="handleBackToCategory">
+        <a-button type="default" class="mb-3" @click="handleBackToCategory">
           <template #icon>
             <ArrowLeftOutlined />
           </template>

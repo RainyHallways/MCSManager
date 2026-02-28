@@ -40,8 +40,8 @@ function buildColumnDefs(): PackageTableColumnDef[] {
       key: "title",
       dataIndex: "title",
       title: t("TXT_CODE_b5a0661a"),
-      // maxWidth: 300,
-      // width: 160,
+      maxWidth: 600,
+      width: 160,
       align: "left"
     },
     {
@@ -53,25 +53,26 @@ function buildColumnDefs(): PackageTableColumnDef[] {
       useTag: true
     },
     {
-      key: "runtime",
-      dataIndex: "runtime",
-      title: t("TXT_CODE_18b94497"),
+      key: "tags",
+      dataIndex: "tags",
+      title: t("标签"),
       width: 100,
       align: "center",
       useTag: true
     },
     {
-      key: "hardware",
-      dataIndex: "hardware",
-      title: t("TXT_CODE_683e3033"),
+      key: "remark",
+      dataIndex: "remark",
+      title: t("备注"),
       width: 100,
+      maxWidth: 180,
       align: "center"
     },
     {
       key: "author",
       dataIndex: "author",
       title: t("贡献者"),
-      width: 100,
+      width: 90,
       align: "center"
     },
     {

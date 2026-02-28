@@ -56,7 +56,21 @@ function platformDisplayText(platform: string): string {
       <!-- Image column -->
       <template v-if="getColumnDef(String(column.key ?? ''))?.isImage">
         <div class="package-table-image-cell">
-          <img v-if="record.image" :src="record.image" alt="" class="package-table-thumb" />
+          <template v-if="record.image">
+            <a-popover trigger="hover" placement="top">
+              <template #content>
+                <div class="package-table-image-popover">
+                  <img :src="record.image" alt="" class="package-table-image-popover-img" />
+                </div>
+              </template>
+              <a-avatar
+                :src="record.image"
+                :size="48"
+                shape="square"
+                class="package-table-avatar"
+              />
+            </a-popover>
+          </template>
           <span v-else class="package-table-thumb-placeholder">—</span>
         </div>
       </template>
@@ -72,14 +86,26 @@ function platformDisplayText(platform: string): string {
               {{ record?.setupInfo?.docker?.image }}
             </a-tag>
           </Flex>
-          <a-typography-text type="secondary" class="package-table-description-cell">
-            {{ record.description }}
-          </a-typography-text>
+          <a-tooltip :title="record.description" placement="topLeft">
+            <a-typography-text type="secondary" class="package-table-description-cell">
+              {{ record.description }}
+            </a-typography-text>
+          </a-tooltip>
         </div>
       </template>
 
+      <template v-else-if="column.key === 'remark'">
+        <a-tooltip :title="record.remark || '—'" placement="topLeft">
+          <a-typography-text type="secondary" class="package-table-description-cell">
+            {{ record.remark }}
+          </a-typography-text>
+        </a-tooltip>
+      </template>
+
       <!-- Tags -->
-      <template v-else-if="['runtime', 'hardware', 'platform'].includes(String(column.key))">
+      <template
+        v-else-if="['runtime', 'hardware', 'platform', 'tags'].includes(String(column.key))"
+      >
         <div class="ml-8">
           <a-tag color="blue">{{ getCellText(record, String(column.dataIndex)) }}</a-tag>
         </div>
@@ -121,10 +147,22 @@ function platformDisplayText(platform: string): string {
   align-items: center;
   justify-content: center;
 }
-.package-table-thumb {
-  width: 48px;
-  height: 48px;
+.package-table-avatar {
+  border-radius: 4px;
+  cursor: pointer;
+}
+.package-table-avatar :deep(img) {
   object-fit: cover;
+}
+.package-table-image-popover {
+  padding: 4px;
+}
+.package-table-image-popover-img {
+  width: 500px;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+  display: block;
   border-radius: 4px;
 }
 .package-table-thumb-placeholder {

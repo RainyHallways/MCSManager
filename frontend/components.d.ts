@@ -45,6 +45,7 @@ declare module 'vue' {
     AnyAppForm: typeof import('./src/components/fc/CmdAssistantDialog/AnyAppForm.vue')['default']
     APagination: typeof import('ant-design-vue/es')['Pagination']
     APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
+    APopover: typeof import('ant-design-vue/es')['Popover']
     AppConfigProvider: typeof import('./src/components/AppConfigProvider.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     AProgress: typeof import('ant-design-vue/es')['Progress']
