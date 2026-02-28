@@ -166,7 +166,7 @@ const openEditor = () => {
     <a-modal
       v-model:open="showCreateForm"
       :title="t('TXT_CODE_645bc545')"
-      :width="800"
+      :width="1000"
       :footer="null"
       :destroy-on-close="true"
     >
