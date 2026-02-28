@@ -61,7 +61,7 @@
       "hardware": "",
       "size": "",
       "targetLink": "",
-      "author": "南赛",
+      "author": "MCSManager",
       "tags": [
         "Commercial Use Allowed",
         "Docker version"
@@ -97,11 +97,11 @@
       "title": "Factorio Docker Server",
       "language": "en_us",
       "platform": "Linux",
-      "description": "Use Factorio third-party Docker images to quickly get started!",
+      "description": "Use the steam-game-runtime Docker image and SteamCMD to run Factorio Dedicated Server.",
       "image": "https://cdn.factorio.com/assets/img/web/factorio-logo2.png",
       "gameType": "Factorio",
       "category": "Latest Version",
-      "runtime": "Windows/Linux",
+      "runtime": "Linux",
       "hardware": "X86_64、RAM 4G+",
       "size": "",
       "targetLink": "",
@@ -110,8 +110,9 @@
         "Docker version"
       ],
       "setupInfo": {
-        "startCommand": "",
+        "startCommand": "./bin/x64/factorio --start-server-load-latest",
         "stopCommand": "^C",
+        "updateCommand": "/home/steam/steamcmd/steamcmd.sh -net_ipv4 +force_install_dir \"/data\" +login anonymous \"+app_update 427520 validate\" +quit",
         "ie": "utf8",
         "oe": "utf8",
         "type": "steam/universal",
@@ -120,16 +121,17 @@
         ],
         "fileCode": "utf8",
         "processType": "docker",
-        "updateCommand": "",
+        "runAs": "steam",
         "docker": {
-          "image": "factoriotools/factorio:latest",
+          "image": "githubyumao/steam-game-runtime:latest",
+          "updateCommandImage": "githubyumao/steam-game-runtime:latest",
           "ports": [
             "{mcsm_port1}:34197/udp"
           ],
-          "extraVolumes": [],
-          "workingDir": "/factorio",
+          "changeWorkdir": true,
+          "workingDir": "/data",
           "env": [],
-          "changeWorkdir": false
+          "extraVolumes": []
         }
       }
     },
@@ -138,31 +140,46 @@
       "language": "en_us",
       "image": "https://hytale.com/static/images/logo.png",
       "gameType": "Hytale",
-      "description": "Hytale Quick Server Setup, Mod Support",
-      "title": "Hytale Server",
+      "description": "Use Eclipse Temurin Java Docker image to run Hytale Dedicated Server.",
+      "title": "Hytale Docker Server",
       "category": "hytale",
-      "runtime": "Java 25+",
+      "runtime": "Linux",
       "hardware": "RAM 4G+",
       "targetLink": "https://github.com/SkyKingPX/Hytale-Server-Installer/releases/download/1.0.0/hytale-server-installer-linux-mcsm.zip",
       "author": "SkyKing_PX",
+      "tags": [
+        "Docker version"
+      ],
       "setupInfo": {
         "type": "hytale",
         "startCommand": "java -Xms2G -Xmx4G -XX:AOTCache=HytaleServer.aot -jar HytaleServer.jar --assets Assets.zip",
         "stopCommand": "stop",
-        "updateCommand": "sudo ./hytale-server-installer-linux",
+        "updateCommand": "./hytale-server-installer-linux",
         "ie": "UTF-8",
-        "oe": "UTF-8"
+        "oe": "UTF-8",
+        "processType": "docker",
+        "docker": {
+          "image": "eclipse-temurin:25-jdk",
+          "updateCommandImage": "eclipse-temurin:25-jdk",
+          "ports": [
+            "{mcsm_port1}:5520/udp"
+          ],
+          "changeWorkdir": true,
+          "workingDir": "/data",
+          "env": [],
+          "extraVolumes": []
+        }
       }
     },
     {
       "title": "Terraria Server",
       "language": "en_us",
       "platform": "Linux",
-      "description": "For Linux systems, using a third-party Docker image of Terraria for quick server deployment!",
+      "description": "Use the steam-game-runtime Docker image and SteamCMD to run Terraria Dedicated Server.",
       "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/terraria.webp",
       "gameType": "Terraria",
       "category": "Latest Version",
-      "runtime": "Ubuntu/Centos LTS",
+      "runtime": "Linux",
       "hardware": "RAM 8G+",
       "size": "",
       "targetLink": "",
@@ -171,8 +188,9 @@
         "Docker version"
       ],
       "setupInfo": {
-        "startCommand": "",
+        "startCommand": "./TerrariaServer.bin.x86_64 -port 7777 -autocreate 2 -worldname world1",
         "stopCommand": "exit",
+        "updateCommand": "/home/steam/steamcmd/steamcmd.sh -net_ipv4 +force_install_dir \"/data\" +login anonymous \"+app_update 105600 validate\" +quit",
         "ie": "utf8",
         "oe": "utf8",
         "type": "steam/terraria",
@@ -181,28 +199,29 @@
         ],
         "fileCode": "utf8",
         "processType": "docker",
-        "updateCommand": "",
+        "runAs": "steam",
         "docker": {
-          "image": "ryshe/terraria:latest",
+          "image": "githubyumao/steam-game-runtime:latest",
+          "updateCommandImage": "githubyumao/steam-game-runtime:latest",
           "ports": [
             "{mcsm_port1}:7777/tcp"
           ],
-          "extraVolumes": [],
-          "workingDir": "/root/.local/share/Terraria/Worlds",
+          "changeWorkdir": true,
+          "workingDir": "/data",
           "env": [],
-          "changeWorkdir": false
+          "extraVolumes": []
         }
       }
     },
     {
-      "title": "Palworld Official Server",
+      "title": "Palworld Server",
       "language": "en_us",
       "platform": "Linux",
-      "description": "This template uses Docker for installation. Docker must be installed on your Linux server! The default password after installation is 123456. To change it, please go to the environment variables.",
+      "description": "Use the steam-game-runtime Docker image and SteamCMD to run Palworld Dedicated Server.",
       "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/palworld.webp",
       "gameType": "Palworld",
       "category": "Latest Version",
-      "runtime": "Ubuntu/Centos LTS",
+      "runtime": "Linux",
       "hardware": "RAM 8G+",
       "size": "",
       "targetLink": "",
@@ -211,7 +230,9 @@
         "Docker version"
       ],
       "setupInfo": {
-        "stopCommand": "stop",
+        "startCommand": "./PalServer.sh -port=8211 -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS",
+        "stopCommand": "^C",
+        "updateCommand": "/home/steam/steamcmd/steamcmd.sh -net_ipv4 +force_install_dir \"/data\" +login anonymous \"+app_update 2394010 validate\" +quit",
         "ie": "utf8",
         "oe": "utf8",
         "type": "steam/universal",
@@ -220,21 +241,18 @@
         ],
         "fileCode": "utf8",
         "processType": "docker",
-        "updateCommand": "",
+        "runAs": "steam",
         "docker": {
-          "image": "kagurazakanyaa/palworld:latest",
-          "changeWorkdir": false,
-          "networkMode": "bridge",
-          "workingDir": "/opt/palworld/Pal/Saved",
+          "image": "githubyumao/steam-game-runtime:latest",
+          "updateCommandImage": "githubyumao/steam-game-runtime:latest",
           "ports": [
-            "{mcsm_port1}:8211/tcp",
+            "{mcsm_port1}:8211/udp",
             "{mcsm_port2}:25575/tcp"
           ],
-          "env": [
-            "SERVER_NAME=Private PalWorld Server",
-            "SERVER_DESC=Private PalWorld Server",
-            "ADMIN_PASSWORD=123456"
-          ]
+          "changeWorkdir": true,
+          "workingDir": "/data",
+          "env": [],
+          "extraVolumes": []
         }
       }
     },
@@ -243,12 +261,12 @@
       "title-zh": "僵尸毁灭工程",
       "language": "en_us",
       "platform": "Linux",
-      "description": "For Linux systems, using a third-party Docker image of Project Zomboid for quick server deployment!",
-      "description-zh": "适用于 Linux 系统，使用第三方 Docker 镜像的 Project Zomboid 快速部署服务器！",
+      "description": "Use the steam-game-runtime Docker image and SteamCMD to run Project Zomboid Dedicated Server.",
+      "description-zh": "使用 steam-game-runtime Docker 镜像和 SteamCMD 运行 Project Zomboid 专用服务器。",
       "image": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/package-images/pzomboid.webp",
       "gameType": "Zombie Survival",
       "category": "Latest Version",
-      "runtime": "Ubuntu/Centos LTS",
+      "runtime": "Linux",
       "hardware": "RAM 8G+",
       "size": "",
       "targetLink": "",
@@ -257,8 +275,9 @@
         "Docker version"
       ],
       "setupInfo": {
-        "startCommand": "",
-        "stopCommand": "stop",
+        "startCommand": "./start-server.sh",
+        "stopCommand": "^C",
+        "updateCommand": "/home/steam/steamcmd/steamcmd.sh -net_ipv4 +force_install_dir \"/data\" +login anonymous \"+app_update 380870 validate\" +quit",
         "ie": "utf8",
         "oe": "utf8",
         "type": "steam/universal",
@@ -267,20 +286,18 @@
         ],
         "fileCode": "utf8",
         "processType": "docker",
-        "updateCommand": "",
+        "runAs": "steam",
         "docker": {
-          "image": "renegademaster/zomboid-dedicated-server:latest",
+          "image": "githubyumao/steam-game-runtime:latest",
+          "updateCommandImage": "githubyumao/steam-game-runtime:latest",
           "ports": [
-            "{mcsm_port2}:16262/udp",
-            "{mcsm_port1}:16261/udp"
+            "{mcsm_port1}:16261/udp",
+            "{mcsm_port2}:16262/udp"
           ],
-          "extraVolumes": [
-            "{mcsm_workspace}/ZomboidConfig|/home/steam/Zomboid",
-            "{mcsm_workspace}/ZomboidDedicatedServer|/home/steam/ZomboidDedicatedServer"
-          ],
-          "workingDir": "",
+          "changeWorkdir": true,
+          "workingDir": "/data",
           "env": [],
-          "changeWorkdir": false
+          "extraVolumes": []
         }
       }
     },
@@ -358,12 +375,12 @@
       "author": "NanSai",
       "tags": [],
       "remark": "Need to install Visual C++",
-      "targetLink": "https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/steamcmd.exe",
+      "targetLink": "",
       "setupInfo": {
         "type": "steam/universal",
         "startCommand": "\"SquadGame/Binaries/Win64/SquadGameServer.exe\" Port=7787 QueryPort=15000 -log",
         "stopCommand": "^C",
-        "updateCommand": "steamcmd.exe +login anonymous +force_install_dir \"{mcsm_workspace}\" +app_update 403240 validate +quit",
+        "updateCommand": "{mcsm_steamcmd} +login anonymous +force_install_dir \"{mcsm_workspace}\" +app_update 403240 validate +quit",
         "ie": "utf-8",
         "oe": "utf-8"
       }
