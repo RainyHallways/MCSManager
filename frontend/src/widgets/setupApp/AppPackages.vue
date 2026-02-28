@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import CardPanel from "@/components/CardPanel.vue";
 import FadeUpAnimation from "@/components/FadeUpAnimation.vue";
 import Loading from "@/components/Loading.vue";
-import { router } from "@/config/router";
-import { useMarketPackages } from "@/hooks/useMarketPackages";
+import { SEARCH_ALL_KEY, useMarketPackages } from "@/hooks/useMarketPackages";
 import { t } from "@/lang/i18n";
 import type { QuickStartPackages } from "@/types";
-import { DownloadOutlined } from "@ant-design/icons-vue";
-import { onMounted } from "vue";
+import { ArrowLeftOutlined } from "@ant-design/icons-vue";
+import { computed, onMounted } from "vue";
+import PackageDetailTable from "./PackageDetailTable.vue";
 
 const props = defineProps<{
   title?: string;
@@ -20,7 +19,6 @@ const emit = defineEmits<{
   "handle-select-template": [item: QuickStartPackages | null];
 }>();
 
-// Use the market packages composable
 const {
   searchForm,
   appListLoading,
@@ -39,8 +37,14 @@ const {
   onlyDockerTemplate: props.onlyDockerTemplate
 });
 
-const openEditor = () => {
-  router.push("/market/editor");
+/** Whether we are in category view (category cards); otherwise in detail list view */
+const isCategoryView = computed(() => searchForm.gameType === SEARCH_ALL_KEY);
+
+/** Detail list: filtered template list when not in category view */
+const detailList = computed(() => (isCategoryView.value ? [] : appList.value));
+
+const handleBackToCategory = () => {
+  searchForm.gameType = SEARCH_ALL_KEY;
 };
 
 onMounted(() => {
@@ -78,76 +82,6 @@ defineExpose({
 
   <!-- Main content - package marketplace interface -->
   <a-row v-else :gutter="[16, 16]" style="height: 100%">
-    <!-- Search filters section -->
-    <a-col :span="24" :md="24">
-      <a-form
-        layout="horizontal"
-        :model="searchForm"
-        style="display: flex; gap: 10px; flex-wrap: wrap"
-      >
-        <!-- Language filter dropdown -->
-        <a-form-item class="mb-0">
-          <a-select
-            v-model:value="searchForm.language"
-            style="width: 200px"
-            :placeholder="t('TXT_CODE_8a30e150')"
-            @change="handleLanguageChange"
-          >
-            <a-select-option v-for="item in appLangList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <!-- Game type filter dropdown -->
-        <a-form-item class="mb-0">
-          <a-select
-            v-model:value="searchForm.gameType"
-            style="width: 200px"
-            :placeholder="t('TXT_CODE_107695d')"
-            @change="handleGameTypeChange"
-          >
-            <a-select-option v-for="item in appGameTypeList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <!-- Platform filter dropdown -->
-        <a-form-item class="mb-0">
-          <a-select
-            v-model:value="searchForm.platform"
-            style="width: 200px"
-            :placeholder="t('TXT_CODE_47203b64')"
-            @change="handlePlatformChange"
-          >
-            <a-select-option v-for="item in appPlatformList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <!-- Category filter dropdown -->
-        <a-form-item class="mb-0">
-          <a-select
-            v-model:value="searchForm.category"
-            style="width: 200px"
-            :placeholder="t('TXT_CODE_ebbb2def')"
-          >
-            <a-select-option v-for="item in appCategoryList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <a-form-item class="mb-0">
-          <a-button type="default" @click="handleReset">
-            {{ t("TXT_CODE_880fedf7") }}
-          </a-button>
-        </a-form-item>
-      </a-form>
-    </a-col>
-
     <a-col v-if="showCustomBtn" :span="24" :md="24" class="justify-end">
       <a-button
         type="link"
@@ -167,103 +101,45 @@ defineExpose({
       </div>
     </a-col>
 
-    <!-- Package cards grid with fade-up animation -->
-    <fade-up-animation>
-      <a-col
-        v-for="item in appList"
-        :key="item.key"
-        :span="24"
-        :sm="24"
-        :md="12"
-        :lg="item.isSummary ? 8 : 6"
-      >
-        <div style="display: flex; flex-grow: 1; flex-direction: column; height: 100%">
-          <!-- Top Category Card -->
-          <div
-            v-if="item.isSummary"
-            class="package-image-container-summary global-card-container-shadow"
-            style="overflow: hidden"
-            @click="handleSelectTopCategory(item)"
-          >
-            <div class="package-image-container" style="border-radius: 0">
-              <img
-                class="package-image cursor-pointer"
-                style="height: 220px; border-radius: 0"
-                :src="item.image"
-                alt=""
-                srcset=""
-              />
-            </div>
+    <!-- Detail list: table with back-to-category -->
+    <template v-else-if="detailList.length > 0">
+      <a-col :span="24">
+        <a-button type="text" class="mb-3" @click="handleBackToCategory">
+          <template #icon>
+            <ArrowLeftOutlined />
+          </template>
+          {{ t("TXT_CODE_c14b2ea3") }}
+        </a-button>
+      </a-col>
+      <a-col :span="24">
+        <PackageDetailTable
+          :data-source="detailList"
+          :btn-text="btnText"
+          @select="(item) => emit('handle-select-template', item)"
+        />
+      </a-col>
+    </template>
 
-            <a-typography-title :level="5" class="flex-center package-subtitle mb-0">
-              <span>
-                {{ item.title }}
-              </span>
-            </a-typography-title>
+    <!-- Category view: card grid -->
+    <fade-up-animation v-else>
+      <a-col v-for="item in appList" :key="item.key" :span="24" :sm="24" :md="12" :lg="8">
+        <div
+          class="package-image-container-summary global-card-container-shadow"
+          style="overflow: hidden; cursor: pointer"
+          @click="handleSelectTopCategory(item)"
+        >
+          <div class="package-image-container" style="border-radius: 0">
+            <img
+              class="package-image cursor-pointer"
+              style="height: 220px; border-radius: 0"
+              :src="item.image"
+              alt=""
+              srcset=""
+            />
           </div>
-
-          <!-- Template Pack -->
-          <CardPanel v-else style="flex-grow: 1" :style="{ padding: '12px' }">
-            <!-- Package content -->
-            <template #body>
-              <div class="package-card-content">
-                <div class="package-image-container">
-                  <img class="package-image cursor-pointer" :src="item.image" alt="" srcset="" />
-                </div>
-
-                <div class="package-info">
-                  <a-typography-title :level="5" class="justify-between">
-                    <span>
-                      {{ item.title }}
-                    </span>
-                    <span>
-                      <a-tag v-if="item.platform" color="cyan">
-                        {{
-                          String(item.platform).toLowerCase() === "all"
-                            ? t("TXT_CODE_all_platform")
-                            : item.platform
-                        }}
-                      </a-tag>
-                    </span>
-                  </a-typography-title>
-                  <div class="mb-5">
-                    <a-tag v-for="tag in item.tags" :key="tag" color="blue">{{ tag }}</a-tag>
-                  </div>
-                  <a-typography-paragraph>
-                    <a-typography-text :style="{ fontSize: '12px' }">
-                      <p>
-                        <span>
-                          {{ item.description || "&nbsp;" }}
-                        </span>
-                      </p>
-                      <p v-if="item.runtime">
-                        <span style="opacity: 0.6">{{ t("TXT_CODE_18b94497") }}: </span>
-                        <span>{{ item.runtime }}</span>
-                      </p>
-                      <p v-if="item.hardware">
-                        <span style="opacity: 0.6">{{ t("TXT_CODE_683e3033") }}: </span>
-                        <span>{{ item.hardware }}</span>
-                      </p>
-                    </a-typography-text>
-                  </a-typography-paragraph>
-                </div>
-
-                <div class="package-action">
-                  <a-button
-                    block
-                    type="primary"
-                    class="download-button"
-                    @click="emit('handle-select-template', item)"
-                  >
-                    <template #icon>
-                      <DownloadOutlined />
-                    </template>
-                    {{ btnText || t("TXT_CODE_1704ea49") }}
-                  </a-button>
-                </div>
-              </div>
-            </template>
-          </CardPanel>
+          <a-typography-title :level="5" class="flex-center package-subtitle mb-0">
+            <span>{{ item.title }}</span>
+          </a-typography-title>
         </div>
       </a-col>
     </fade-up-animation>

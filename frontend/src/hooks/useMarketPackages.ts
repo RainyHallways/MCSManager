@@ -1,4 +1,4 @@
-import { getCurrentLang, isCN, t } from "@/lang/i18n";
+import { t } from "@/lang/i18n";
 import { quickInstallListAddr } from "@/services/apis/instance";
 import { reportErrorMsg } from "@/tools/validator";
 import type { QuickStartPackages } from "@/types";
@@ -31,11 +31,10 @@ export interface UseMarketPackagesOptions {
 export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
   const packages = ref<QuickStartPackages[]>([]);
   const { onlyDockerTemplate = false } = options;
-  const defaultLanguage = isCN() ? getCurrentLang() : "en_us";
 
   // Search form state
   const searchForm = reactive<SearchForm>({
-    language: defaultLanguage,
+    language: SEARCH_ALL_KEY,
     category: SEARCH_ALL_KEY,
     gameType: SEARCH_ALL_KEY,
     platform: SEARCH_ALL_KEY
@@ -210,7 +209,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
 
   // Handler functions
   const handleReset = () => {
-    searchForm.language = defaultLanguage;
+    searchForm.language = SEARCH_ALL_KEY;
     searchForm.gameType = SEARCH_ALL_KEY;
     searchForm.category = SEARCH_ALL_KEY;
     searchForm.platform = SEARCH_ALL_KEY;
