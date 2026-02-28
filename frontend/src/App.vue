@@ -29,9 +29,17 @@ onMounted(async () => {
 <template>
   <AppConfigProvider :has-bg-image="hasBgImage">
     <!-- App Container -->
-    <div class="global-app-container">
-      <AppHeader />
-      <RouterView :key="$route.fullPath" />
+    <div class="global-app-container global-app-container-with-sidebar">
+      <aside class="left-sidebar">
+        <div>
+          <!-- 左侧菜单 -->
+        </div>
+      </aside>
+      <main class="main-content">
+        <AppHeader />
+        <RouterView :key="$route.fullPath" />
+      </main>
+      <aside class="right-sidebar"></aside>
       <UploadBubble />
     </div>
 
@@ -39,3 +47,28 @@ onMounted(async () => {
     <component :is="component" v-for="(component, index) in GLOBAL_COMPONENTS" :key="index" />
   </AppConfigProvider>
 </template>
+
+<style lang="scss" scoped>
+.global-app-container-with-sidebar {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+
+  .left-sidebar {
+    text-align: right;
+    background-color: rgb(201, 201, 201);
+    border-right: 1px solid rgb(155, 155, 155);
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .main-content {
+    flex: 0 1 1300px;
+    min-width: 0;
+  }
+}
+</style>
