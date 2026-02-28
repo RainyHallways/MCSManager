@@ -1,43 +1,27 @@
 <script setup lang="ts">
 import logo from "@/assets/logo.png";
-import { router, type RouterMetaInfo } from "@/config/router";
+import type { RouterMetaInfo } from "@/config/router";
+import { useHeaderMenus } from "@/hooks/useHeaderMenus";
 import { useAppRouters } from "@/hooks/useAppRouters";
 import { useScreen } from "@/hooks/useScreen";
 import { t } from "@/lang/i18n";
-import { logoutUser } from "@/services/apis/index";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useAppStateStore } from "@/stores/useAppStateStore";
-import { useAppToolsStore } from "@/stores/useAppToolsStore";
 import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
-import { AppTheme } from "@/types/const";
-import {
-  AppstoreAddOutlined,
-  BgColorsOutlined,
-  BuildOutlined,
-  CloseCircleOutlined,
-  GithubFilled,
-  LogoutOutlined,
-  MenuUnfoldOutlined,
-  RedoOutlined,
-  SaveOutlined,
-  SketchOutlined,
-  UserOutlined
-} from "@ant-design/icons-vue";
+import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
 import { useScroll } from "@vueuse/core";
-import { message, Modal, notification } from "ant-design-vue";
 import { computed, h, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useLayoutConfigStore } from "../stores/useLayoutConfig";
 import CardPanel from "./CardPanel.vue";
 
-const { saveGlobalLayoutConfig, resetGlobalLayoutConfig, getSettingsConfig } =
-  useLayoutConfigStore();
-const { containerState, changeDesignMode } = useLayoutContainerStore();
-const { getRouteParamsUrl, toPage } = useAppRouters();
-const { setTheme, setLogoImage, logoImage } = useAppConfigStore();
-const { state: appTools } = useAppToolsStore();
-const { isAdmin, state: appState, isLogged } = useAppStateStore();
-const { state: frontendState } = useAppStateStore();
+const { getSettingsConfig } = useLayoutConfigStore();
+const { containerState } = useLayoutContainerStore();
+const { getRouteParamsUrl } = useAppRouters();
+const { setLogoImage, logoImage } = useAppConfigStore();
+const { state: appState } = useAppStateStore();
+
+const { menus, appMenus, handleToPage } = useHeaderMenus();
 
 const { y } = useScroll(document.body);
 
@@ -62,52 +46,7 @@ const headerStyle = computed(() => {
   };
 });
 
-const openNewCardDialog = () => {
-  containerState.showNewCardDialog = true;
-};
-
-const { execute } = logoutUser();
-
-const handleToPage = (url: string) => {
-  containerState.showPhoneMenu = false;
-  toPage({
-    path: url
-  });
-};
-
 const route = useRoute();
-
-const menus = computed(() => {
-  return router
-    .getRoutes()
-    .filter((v) => {
-      if (v.path === "/" || !v.name) return false;
-      const metaInfo = v.meta as RouterMetaInfo;
-      if (metaInfo.condition && !metaInfo.condition()) {
-        return false;
-      }
-      if (containerState.isDesignMode) {
-        return metaInfo.onlyDisplayEditMode || metaInfo.mainMenu;
-      }
-      if (isAdmin.value) {
-        return metaInfo.mainMenu === true && metaInfo.onlyDisplayEditMode !== true;
-      }
-
-      return (
-        metaInfo.mainMenu === true &&
-        isLogged.value &&
-        Number(appState.userInfo?.permission) >= Number(metaInfo.permission)
-      );
-    })
-    .map((r) => {
-      return {
-        name: r.name,
-        path: r.path,
-        meta: r.meta,
-        customClass: r.meta.customClass ?? []
-      };
-    });
-});
 
 const breadcrumbs = computed(() => {
   const arr = [
@@ -142,174 +81,10 @@ const breadcrumbs = computed(() => {
   return arr;
 });
 
-const appMenus = computed(() => {
-  return [
-    {
-      iconText: "",
-      // iconText: t("TXT_CODE_3ccb26e"),
-      title: t("TXT_CODE_b01f8383"),
-      icon: GithubFilled,
-      conditions: !isProMode.value,
-      onlyPC: true,
-      click: onClickIcon
-    },
-    {
-      iconText: t("TXT_CODE_80f0904e"),
-      title: t("TXT_CODE_b6c675d6"),
-      icon: SketchOutlined,
-      click: onClickIcon,
-      conditions: isProMode.value,
-      onlyPC: true,
-      customClass: ["nav-button-success"]
-    },
-    {
-      title: t("TXT_CODE_8b0f8aab"),
-      icon: AppstoreAddOutlined,
-      click: openNewCardDialog,
-      conditions: containerState.isDesignMode,
-      onlyPC: true
-    },
-    {
-      title: t("TXT_CODE_8145d82"),
-      icon: SaveOutlined,
-      click: async () => {
-        Modal.confirm({
-          title: t("TXT_CODE_d73c8510"),
-          content: t("TXT_CODE_6d9b9f22"),
-          async onOk() {
-            changeDesignMode(false);
-            await saveGlobalLayoutConfig();
-            notification.success({
-              placement: "top",
-              message: t("TXT_CODE_47c35915"),
-              description: t("TXT_CODE_e10c992a")
-            });
-            setTimeout(() => window.location.reload(), 400);
-          }
-        });
-      },
-      conditions: containerState.isDesignMode,
-      onlyPC: true,
-      customClass: ["nav-button-success"]
-    },
-    {
-      title: t("TXT_CODE_5b5d6f04"),
-      icon: CloseCircleOutlined,
-      click: async () => {
-        Modal.confirm({
-          title: t("TXT_CODE_8f20c21c"),
-          content: t("TXT_CODE_9740f199"),
-          async onOk() {
-            window.location.reload();
-          }
-        });
-      },
-      conditions: containerState.isDesignMode,
-      onlyPC: true,
-      customClass: ["nav-button-warning"]
-    },
-    {
-      title: t("TXT_CODE_abd2f7e1"),
-      icon: RedoOutlined,
-      click: async () => {
-        Modal.confirm({
-          title: t("TXT_CODE_74fa2f73"),
-          content: t("TXT_CODE_f63bfe78"),
-          async onOk() {
-            await resetGlobalLayoutConfig();
-            notification.success({
-              placement: "top",
-              message: t("TXT_CODE_15c6d4eb"),
-              description: t("TXT_CODE_e10c992a")
-            });
-            setTimeout(() => window.location.reload(), 400);
-          }
-        });
-      },
-      conditions: containerState.isDesignMode,
-      onlyPC: true,
-      customClass: ["nav-button-danger"]
-    },
-
-    {
-      title: t("TXT_CODE_f591e2fa"),
-      icon: BgColorsOutlined,
-      click: (key: string) => {
-        setTheme(Number(key) as AppTheme);
-      },
-      conditions: !containerState.isDesignMode,
-      onlyPC: false,
-      menus: [
-        {
-          value: AppTheme.AUTO,
-          title: t("TXT_CODE_dc8de4ff")
-        },
-        {
-          value: AppTheme.LIGHT,
-          title: t("TXT_CODE_673eac8e")
-        },
-        {
-          value: AppTheme.DARK,
-          title: t("TXT_CODE_5e4a370d")
-        }
-      ]
-    },
-    {
-      title: t("TXT_CODE_ebd2a6a1"),
-      icon: BuildOutlined,
-      click: () => {
-        changeDesignMode(true);
-        notification.warning({
-          placement: "bottom",
-          type: "warning",
-          message: t("TXT_CODE_7b1adf35"),
-          description: t("TXT_CODE_6b6f1d3")
-        });
-      },
-      conditions: !containerState.isDesignMode && isAdmin.value,
-      onlyPC: true
-    },
-    {
-      title: t("TXT_CODE_8c3164c9"),
-      icon: UserOutlined,
-      click: () => {
-        appTools.showUserInfoDialog = true;
-      },
-      conditions: !containerState.isDesignMode && isLogged.value,
-      onlyPC: false
-    },
-    {
-      title: t("TXT_CODE_2c69ab15"),
-      icon: LogoutOutlined,
-      click: async () => {
-        Modal.confirm({
-          title: t("TXT_CODE_9654b91c"),
-          async onOk() {
-            await execute();
-            message.success(t("TXT_CODE_11673d8c"));
-            setTimeout(() => (window.location.href = "/"), 400);
-          }
-        });
-      },
-      customClass: ["nav-button-danger"],
-      conditions: !containerState.isDesignMode && isLogged.value,
-      onlyPC: false
-    }
-  ];
-});
-
 const { isPhone } = useScreen();
-
-const isProMode = computed(() => {
-  return !!frontendState.settings.businessMode;
-});
 
 const openPhoneMenu = (b = false) => {
   containerState.showPhoneMenu = b;
-};
-
-const onClickIcon = () => {
-  window.open("https://github.com/MCSManager/MCSManager", "_blank");
 };
 </script>
 

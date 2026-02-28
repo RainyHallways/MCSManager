@@ -48,6 +48,7 @@ declare module 'vue' {
     APopover: typeof import('ant-design-vue/es')['Popover']
     AppConfigProvider: typeof import('./src/components/AppConfigProvider.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
+    AppSidebarMenu: typeof import('./src/components/AppSidebarMenu.vue')['default']
     AProgress: typeof import('ant-design-vue/es')['Progress']
     ARadioButton: typeof import('ant-design-vue/es')['RadioButton']
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']

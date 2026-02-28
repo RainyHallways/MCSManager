@@ -6,7 +6,7 @@ import { Button, Input, Select, Table } from "ant-design-vue";
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import AppConfigProvider from "./components/AppConfigProvider.vue";
-import AppHeader from "./components/AppHeader.vue";
+import AppSidebarMenu from "./components/AppSidebarMenu.vue";
 import InputDialogProvider from "./components/InputDialogProvider.vue";
 import MyselfInfoDialog from "./components/MyselfInfoDialog.vue";
 import { closeAppLoading, setLoadingTitle } from "./tools/dom";
@@ -31,12 +31,10 @@ onMounted(async () => {
     <!-- App Container -->
     <div class="global-app-container global-app-container-with-sidebar">
       <aside class="left-sidebar">
-        <div>
-          <!-- 左侧菜单 -->
-        </div>
+        <AppSidebarMenu />
       </aside>
       <main class="main-content">
-        <AppHeader />
+        <!-- <AppHeader /> -->
         <RouterView :key="$route.fullPath" />
       </main>
       <aside class="right-sidebar"></aside>
@@ -53,11 +51,14 @@ onMounted(async () => {
   display: flex;
   flex-wrap: nowrap;
   gap: 24px;
+  min-height: 100vh;
 
   .left-sidebar {
     text-align: right;
     background-color: rgb(201, 201, 201);
     border-right: 1px solid rgb(155, 155, 155);
+    background-image: url("@/assets/side.png");
+    padding: 54px 24px;
   }
 
   .left-sidebar,
@@ -67,6 +68,7 @@ onMounted(async () => {
   }
 
   .main-content {
+    margin-top: 54px;
     flex: 0 1 1300px;
     min-width: 0;
   }
