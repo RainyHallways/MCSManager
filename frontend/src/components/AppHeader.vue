@@ -7,14 +7,23 @@ import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
 import { useScroll } from "@vueuse/core";
 import { computed, h, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { useLayoutConfigStore } from "../stores/useLayoutConfig";
 import CardPanel from "./CardPanel.vue";
 
+const route = useRoute();
 const { getSettingsConfig } = useLayoutConfigStore();
 const { containerState } = useLayoutContainerStore();
 const { setLogoImage, logoImage } = useAppConfigStore();
 
 const { menus, appMenus, handleToPage } = useHeaderMenus();
+
+/** 判断路由菜单项是否处于激活状态（当前页面与该 path 一致或是其子路径） */
+const isRouteActive = (path: string): boolean => {
+  if (route.path === path) return true;
+  if (path === "/") return false;
+  return route.path.startsWith(path + "/");
+};
 
 const { y } = useScroll(document.body);
 
@@ -60,14 +69,14 @@ const openPhoneMenu = (b = false) => {
           v-for="item in menus"
           :key="item.path"
           class="nav-button"
-          :class="item.customClass"
+          :class="[item.customClass, { 'nav-button-active': isRouteActive(item.path) }]"
           @click="handleToPage(item.path)"
         >
           <span>{{ item.name }}</span>
         </div>
       </nav>
       <div class="btns">
-        <div v-for="(item, index) in appMenus" :key="index">
+        <div v-for="(item, index) in appMenus as any" :key="index">
           <a-dropdown v-if="item.menus && item.conditions" placement="bottom">
             <div
               :class="item.customClass"
@@ -167,6 +176,7 @@ const openPhoneMenu = (b = false) => {
         v-for="item in menus"
         :key="item.path"
         class="phone-menu-btn"
+        :class="{ 'phone-menu-btn-active': isRouteActive(item.path) }"
         @click="handleToPage(item.path)"
       >
         {{ item.name }}
@@ -204,6 +214,10 @@ const openPhoneMenu = (b = false) => {
     border-bottom: 1px solid var(--color-gray-4);
     color: var(--color-gray-12);
   }
+
+  .phone-menu-btn-active {
+    background-color: rgba(64, 156, 216, 0.12);
+  }
 }
 
 .app-header-content-for-phone {
@@ -231,7 +245,7 @@ const openPhoneMenu = (b = false) => {
 
 .app-header-wrapper {
   box-shadow: 0 2px 4px 0 var(--card-shadow-color);
-
+  background-image: url("@/assets/side.png");
   width: 100%;
   display: flex;
   justify-content: center;
@@ -292,6 +306,10 @@ const openPhoneMenu = (b = false) => {
   }
   .nav-button:hover {
     background-color: rgba(215, 215, 215, 0.261);
+  }
+
+  .nav-button-active {
+    background-color: rgba(215, 215, 215, 0.35);
   }
 
   .logo {

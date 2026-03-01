@@ -264,23 +264,17 @@ const handleSaveBgUrl = async (url?: string) => {
 };
 
 /** Persist sidebar position to layout config; reloads the app so initAppTheme picks it up. */
-const handleSaveSidebarPosition = () => {
-  Modal.confirm({
-    title: t("TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_SAVE_CONFIRM_TITLE"),
-    content: t("TXT_CODE_cf95364f"),
-    async onOk() {
-      const cfg = await getSettingsConfig();
-      if (!cfg) {
-        return reportErrorMsg(t("TXT_CODE_b89780e2"));
-      }
-      if (!cfg.theme) {
-        cfg.theme = { pageTitle: "", logoImage: "", backgroundImage: "" };
-      }
-      cfg.theme.sidebarPosition = sidebarPosition.value;
-      await setSettingsConfig(cfg);
-      message.success(t("TXT_CODE_a7907771"));
-    }
-  });
+const handleSaveSidebarPosition = async () => {
+  const cfg = await getSettingsConfig();
+  if (!cfg) {
+    return reportErrorMsg(t("TXT_CODE_b89780e2"));
+  }
+  if (!cfg.theme) {
+    cfg.theme = { pageTitle: "", logoImage: "", backgroundImage: "" };
+  }
+  cfg.theme.sidebarPosition = sidebarPosition.value;
+  await setSettingsConfig(cfg);
+  message.success(t("TXT_CODE_a7907771"));
 };
 
 const startDesignUI = async () => {

@@ -57,6 +57,9 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
+.app-layout-sidebar-only {
+  margin-top: 12px;
+}
 @media (max-width: 1959px) {
   .app-layout-sidebar-only {
     padding-left: 260px;

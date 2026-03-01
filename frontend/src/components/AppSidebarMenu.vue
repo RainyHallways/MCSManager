@@ -8,7 +8,7 @@ import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import {
   ApartmentOutlined,
   AppstoreOutlined,
-  DashboardOutlined,
+  AreaChartOutlined,
   LinkOutlined,
   LoginOutlined,
   MenuOutlined,
@@ -20,14 +20,23 @@ import {
 } from "@ant-design/icons-vue";
 import type { Key } from "ant-design-vue/es/table/interface";
 import type { Component } from "vue";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const { sidebarItems, handleToPage } = useHeaderMenus();
+
+/** 判断路由菜单项是否处于激活状态（当前页面与该 path 一致或是其子路径） */
+const isRouteActive = (path: string): boolean => {
+  if (route.path === path) return true;
+  if (path === "/") return false;
+  return route.path.startsWith(path + "/");
+};
 
 /** 路由 path 对应的侧边栏图标 */
 const routePathIcons: Record<string, Component> = {
   "/instances": AppstoreOutlined,
   "/market": ShopOutlined,
-  "/overview": DashboardOutlined,
+  "/overview": AreaChartOutlined,
   "/users": TeamOutlined,
   "/node": ApartmentOutlined,
   "/settings": SettingOutlined,
@@ -71,7 +80,7 @@ const { logoImage } = useAppConfigStore();
           <a
             v-else-if="entry.type === 'route'"
             class="sidebar-item"
-            :class="entry.customClass"
+            :class="[entry.customClass, { 'sidebar-item-active': isRouteActive(entry.path) }]"
             @click.prevent="handleToPage(entry.path)"
           >
             <component :is="getRouteIcon(entry.path)" class="sidebar-item-icon" />
@@ -127,6 +136,12 @@ const { logoImage } = useAppConfigStore();
     height: 20px;
   }
 }
+
+.left-sidebar:hover {
+  width: 246px;
+  background-position-x: -20px;
+}
+
 .left-sidebar {
   top: 0;
   align-self: flex-start;
@@ -137,6 +152,7 @@ const { logoImage } = useAppConfigStore();
   border-right: 1px solid var(--color-gray-5);
   background-image: url("@/assets/side.png");
   padding: 20px 12px;
+  transition: all 0.3s ease;
 }
 
 .sidebar-menu {
@@ -169,6 +185,10 @@ const { logoImage } = useAppConfigStore();
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.178);
+  }
+
+  &.sidebar-item-active {
+    background-color: rgba(255, 255, 255, 0.22);
   }
 
   .sidebar-item-icon {
