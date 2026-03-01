@@ -1,4 +1,4 @@
-import { t } from "@/lang/i18n";
+import { getCurrentLang, t } from "@/lang/i18n";
 import { quickInstallListAddr } from "@/services/apis/instance";
 import { reportErrorMsg } from "@/tools/validator";
 import type { QuickStartPackages } from "@/types";
@@ -31,11 +31,10 @@ export interface UseMarketPackagesOptions {
 export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
   const packages = ref<QuickStartPackages[]>([]);
   const { onlyDockerTemplate = false } = options;
-  const myLanguage = window.navigator.language.split("-")[0];
 
   // Search form state
   const searchForm = reactive<SearchForm>({
-    language: SEARCH_ALL_KEY,
+    language: getCurrentLang(),
     category: SEARCH_ALL_KEY,
     gameType: SEARCH_ALL_KEY,
     platform: SEARCH_ALL_KEY
@@ -52,7 +51,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
 
   // Specific filter functions
   const matchesLanguageFilter = (item: QuickStartPackages): boolean => {
-    return matchesFilterCondition(item, "language", searchForm.language);
+    return item.language === searchForm.language || item.language === "en_us";
   };
 
   const matchesGameTypeFilter = (item: QuickStartPackages): boolean => {
