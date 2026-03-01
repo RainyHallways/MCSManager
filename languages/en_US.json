@@ -1376,7 +1376,7 @@
   "TXT_CODE_870b392e": "Maximum number of phantoms to spawn per attempt (Use -1 to base this off of world difficulty)",
   "TXT_CODE_8717ed9d": "Please enter environment requirements",
   "TXT_CODE_871cb8bc": "Go to the App Market to install applications",
-  "TXT_CODE_871fb0d6": "Failed Logins : Successful Logins",
+  "TXT_CODE_871fb0d6": "Failed / Successful ",
   "TXT_CODE_871feca": "Enable Brigadier Syntax Highlighting",
   "TXT_CODE_875e804b": "What Difficulty Zombie Villagers Break Doors",
   "TXT_CODE_877eea45": "[Optional] Managed by panel by default. If provided, require absolute path, e.g. C:/Servers/MyServer",
@@ -3294,5 +3294,10 @@
   "TXT_CODE_d284d8a9": "Quick Setup with Preset Package",
   "TXT_CODE_22814776": "New to server creation? Choose our preset packages here! You can always reinstall or change them later.",
   "TXT_CODE_48382669": "Panel Host Resources",
-  "TXT_CODE_6a444b79": "Recent Sensitive Operations"
+  "TXT_CODE_6a444b79": "Recent Sensitive Operations",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_TITLE": "Main navigation position",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_DESCRIPTION": "Choose whether the main app navigation is on the left (sidebar) or right (top header only). Saving will reload the page.",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_LEFT": "Sidebar on the left",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_RIGHT": "Top header only",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_SAVE_CONFIRM_TITLE": "Save navigation position"
 }

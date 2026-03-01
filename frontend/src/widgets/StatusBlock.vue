@@ -166,19 +166,11 @@ const systemBars = computed(() => {
       <template v-else-if="realStatus?.type === 'users'">
         <div class="status-tags status-tags--wrap">
           <a-tag color="red">
-            <span class="status-tag-label">{{
-              t("TXT_CODE_871fb0d6")
-                .replace(/\s*:.*$/, "")
-                .trim()
-            }}</span>
+            <span class="status-tag-label">{{ t("成功") }}</span>
             <span class="status-tag-value">{{ realStatus.loginFailed }}</span>
           </a-tag>
           <a-tag color="green">
-            <span class="status-tag-label">{{
-              t("TXT_CODE_871fb0d6")
-                .replace(/^[^:]*:\s*/, "")
-                .trim()
-            }}</span>
+            <span class="status-tag-label">{{ t("错误") }}</span>
             <span class="status-tag-value">{{ realStatus.logined }}</span>
           </a-tag>
         </div>
