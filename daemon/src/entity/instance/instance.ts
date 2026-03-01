@@ -217,6 +217,7 @@ export default class Instance extends EventEmitter {
     configureEntityParams(this.config, cfg, "basePort", Number);
 
     if (cfg.docker) {
+      configureEntityParams(this.config.docker, cfg.docker, "updateCommandImage", String);
       configureEntityParams(this.config.docker, cfg.docker, "containerName", String);
       configureEntityParams(this.config.docker, cfg.docker, "image", String);
       configureEntityParams(this.config.docker, cfg.docker, "memory", Number);

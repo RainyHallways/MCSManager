@@ -40,16 +40,32 @@ export interface IDockerProcessAdapterStartParam {
 export class SetupDockerContainer extends AsyncTask {
   private container?: Docker.Container;
 
-  constructor(public readonly instance: Instance, public readonly startCommand?: string) {
+  constructor(
+    public readonly instance: Instance,
+    public readonly startCommand?: string,
+    public readonly imageOverride?: string
+  ) {
     super();
   }
 
   public async onStart() {
     const instance = this.instance;
     const customCommand = this.startCommand;
+    const useImageOverride = Boolean(this.imageOverride?.trim());
+
+    if (!fs.existsSync(this.instance.absoluteCwdPath())) {
+      await fs.mkdirs(instance.absoluteCwdPath());
+    }
+    // Because some accounts inside the container may be different from the account running MCSManager,
+    // not setting permissions to 777 may cause failure to install any files properly.
+    fs.chmod(this.instance.absoluteCwdPath(), 0o777).catch(() => {
+      logger.error(
+        `Failed to chmod the instance directory to 777: ${this.instance.absoluteCwdPath()}`
+      );
+    });
 
     try {
-      await instance.forceExec(new DockerPullCommand());
+      await instance.forceExec(new DockerPullCommand(this.imageOverride?.trim()));
     } catch (error: any) {
       throw error;
     }
@@ -251,6 +267,8 @@ export class SetupDockerContainer extends AsyncTask {
       entrypoint = [entrypoint];
     }
 
+    const effectiveImage = useImageOverride ? this.imageOverride! : dockerConfig.image;
+
     logger.info(`Container Entrypoint: ${entrypoint}`);
     logger.info(`Container Start Command: ${startCmd}`);
     logger.info(`Docker Version: ${dockerVersion}`);
@@ -261,7 +279,7 @@ export class SetupDockerContainer extends AsyncTask {
       Cmd: startCmd,
       name: containerName,
       Hostname: containerName,
-      Image: dockerConfig.image,
+      Image: effectiveImage,
       AttachStdin: true,
       AttachStdout: true,
       AttachStderr: true,

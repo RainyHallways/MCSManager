@@ -74,6 +74,8 @@ declare global {
   }
 
   interface IGlobalInstanceDockerConfig {
+    /** Docker image for update command; empty = not used */
+    updateCommandImage?: string;
     containerName?: string;
     image?: string;
     memory?: number;
@@ -226,6 +228,8 @@ declare global {
       pageTitle: string;
       logoImage: string;
       backgroundImage: string;
+      /** Main app navigation: "left" = sidebar, "right" = top header only */
+      sidebarPosition?: "left" | "right";
     };
   }
 
