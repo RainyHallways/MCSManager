@@ -4,7 +4,6 @@ import Loading from "@/components/Loading.vue";
 import { SEARCH_ALL_KEY, useMarketPackages } from "@/hooks/useMarketPackages";
 import { t } from "@/lang/i18n";
 import type { QuickStartPackages } from "@/types";
-import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
 import PackageDetailTable from "./PackageDetailTable.vue";
 
@@ -23,6 +22,7 @@ const {
   searchForm,
   appListLoading,
   filteredList: appList,
+  platformOptions,
   handleSelectTopCategory,
   fetchTemplate
 } = useMarketPackages({
@@ -84,6 +84,30 @@ defineExpose({
       </a-button>
     </a-col>
 
+    <a-col :span="24">
+      <div class="detail-search-bar">
+        <a-select
+          v-model:value="searchForm.platform"
+          :options="platformOptions"
+          :placeholder="t('TXT_CODE_47203b64')"
+          class="detail-search-platform"
+          style="min-width: 140px"
+        />
+        <a-input
+          v-model:value="searchForm.keyword"
+          :placeholder="t('TXT_CODE_ce132192')"
+          class="detail-search-keyword"
+          style="max-width: 280px"
+        />
+        <a-button v-if="detailList.length > 0" type="default" @click="handleBackToCategory">
+          <template #icon>
+            <ArrowLeftOutlined />
+          </template>
+          {{ t("TXT_CODE_c14b2ea3") }}
+        </a-button>
+      </div>
+    </a-col>
+
     <!-- Empty state - shown when no packages match current filters -->
     <a-col v-if="appList.length === 0" :span="24">
       <div style="display: flex; justify-content: center; align-items: center; height: 40vh">
@@ -93,16 +117,8 @@ defineExpose({
       </div>
     </a-col>
 
-    <!-- Detail list: table with back-to-category -->
+    <!-- Detail list: table with back-to-category and search conditions -->
     <template v-else-if="detailList.length > 0">
-      <a-col :span="24">
-        <a-button type="default" class="mb-3" @click="handleBackToCategory">
-          <template #icon>
-            <ArrowLeftOutlined />
-          </template>
-          {{ t("TXT_CODE_c14b2ea3") }}
-        </a-button>
-      </a-col>
       <a-col :span="24">
         <PackageDetailTable
           :data-source="detailList"
@@ -145,3 +161,17 @@ defineExpose({
     </fade-up-animation>
   </a-row>
 </template>
+
+<style scoped>
+.detail-search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.detail-search-platform,
+.detail-search-keyword {
+  flex-shrink: 0;
+}
+</style>

@@ -19,6 +19,8 @@ export interface SearchForm {
   category: string;
   gameType: string;
   platform: string;
+  /** Fuzzy search keyword for package name/title and description */
+  keyword: string;
 }
 
 export interface UseMarketPackagesOptions {
@@ -37,7 +39,8 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     language: getCurrentLang(),
     category: SEARCH_ALL_KEY,
     gameType: SEARCH_ALL_KEY,
-    platform: SEARCH_ALL_KEY
+    platform: SEARCH_ALL_KEY,
+    keyword: ""
   });
 
   // Generic filter condition checker function
@@ -66,6 +69,26 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     return matchesFilterCondition(item, "platform", searchForm.platform);
   };
 
+  /**
+   * Checks if item matches the keyword filter (fuzzy match on title and description).
+   * Empty keyword matches all items. Matching is case-insensitive.
+   */
+  const matchesKeywordFilter = (item: QuickStartPackages): boolean => {
+    const k = searchForm.keyword?.trim() ?? "";
+    if (!k) return true;
+    const lower = k.toLowerCase();
+    const record = item as unknown as Record<string, unknown>;
+    const textFields: string[] = [
+      item.title ?? "",
+      item.description ?? "",
+      String(record["title-zh_cn"] ?? ""),
+      String(record["title-en_us"] ?? ""),
+      String(record["description-zh_cn"] ?? ""),
+      String(record["description-en_us"] ?? "")
+    ];
+    return textFields.some((t) => t.toLowerCase().includes(lower));
+  };
+
   // Get filtered packages based on current search criteria
   const getFilteredPackages = (
     additionalFilters?: (item: QuickStartPackages) => boolean
@@ -79,12 +102,13 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
         return false;
       }
 
-      // Apply base filters (language, game type, category, platform)
+      // Apply base filters (language, game type, category, platform, keyword)
       const baseFilters = [
         matchesLanguageFilter(item),
         matchesGameTypeFilter(item),
         matchesCategoryFilter(item),
-        matchesPlatformFilter(item)
+        matchesPlatformFilter(item),
+        matchesKeywordFilter(item)
       ];
 
       // Combine base filters with additional custom filters if provided
@@ -214,6 +238,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     searchForm.gameType = SEARCH_ALL_KEY;
     searchForm.category = SEARCH_ALL_KEY;
     searchForm.platform = SEARCH_ALL_KEY;
+    searchForm.keyword = "";
   };
 
   const handleGameTypeChange = () => {
@@ -265,6 +290,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     matchesGameTypeFilter,
     matchesCategoryFilter,
     matchesPlatformFilter,
+    matchesKeywordFilter,
 
     // Core functions
     getFilteredPackages,
