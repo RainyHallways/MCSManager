@@ -3295,9 +3295,9 @@
   "TXT_CODE_22814776": "New to server creation? Choose our preset packages here! You can always reinstall or change them later.",
   "TXT_CODE_48382669": "Panel Host Resources",
   "TXT_CODE_6a444b79": "Recent Sensitive Operations",
-  "TXT_CODE_settings.layout.sidebar_position.title": "Main navigation position",
-  "TXT_CODE_settings.layout.sidebar_position.description": "Choose whether the main app navigation is on the left (sidebar) or right (top header only). Saving will reload the page.",
-  "TXT_CODE_settings.layout.sidebar_position.left": "Left (sidebar)",
-  "TXT_CODE_settings.layout.sidebar_position.right": "Right (top header)",
-  "TXT_CODE_settings.layout.sidebar_position.save_confirm_title": "Save navigation position"
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_TITLE": "Main navigation position",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_DESCRIPTION": "Choose whether the main app navigation is on the left (sidebar) or right (top header only). Saving will reload the page.",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_LEFT": "Sidebar on the left",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_RIGHT": "Top header only",
+  "TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_SAVE_CONFIRM_TITLE": "Save navigation position"
 }

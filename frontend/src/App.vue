@@ -2,6 +2,7 @@
 import UploadBubble from "@/components/UploadBubble.vue";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 
+import { useBreakpoints } from "@vueuse/core";
 import { Button, Input, Select, Table } from "ant-design-vue";
 import { computed, onMounted } from "vue";
 import { RouterView } from "vue-router";
@@ -16,7 +17,11 @@ import { closeAppLoading, setLoadingTitle } from "./tools/dom";
 const { hasBgImage, initAppTheme, sidebarPosition } = useAppConfigStore();
 
 /** Whether to show the left sidebar; when false, only top header (AppHeader) is used. */
-const useSidebarLayout = computed(() => sidebarPosition.value === "left");
+const breakpoints = useBreakpoints({ sidebar: 1300 });
+const isWideEnoughForSidebar = breakpoints.greaterOrEqual("sidebar");
+const useSidebarLayout = computed(
+  () => sidebarPosition.value === "left" && isWideEnoughForSidebar.value
+);
 
 const GLOBAL_COMPONENTS = [InputDialogProvider, MyselfInfoDialog];
 
@@ -36,7 +41,7 @@ onMounted(async () => {
     <AppSidebarMenu v-if="useSidebarLayout" />
 
     <!-- App Container -->
-    <div class="global-app-container" :class="{ 'app-layout-header-only': !useSidebarLayout }">
+    <div class="global-app-container" :class="{ 'app-layout-sidebar-only': useSidebarLayout }">
       <main class="main-content">
         <AppHeader v-if="!useSidebarLayout" />
         <Breadcrumbs />
@@ -50,3 +55,11 @@ onMounted(async () => {
     <component :is="component" v-for="(component, index) in GLOBAL_COMPONENTS" :key="index" />
   </AppConfigProvider>
 </template>
+
+<style lang="scss" scoped>
+@media (max-width: 1959px) {
+  .app-layout-sidebar-only {
+    padding-left: 260px;
+  }
+}
+</style>

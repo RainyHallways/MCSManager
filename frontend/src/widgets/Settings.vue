@@ -49,8 +49,8 @@ interface MySettings extends Settings {
 
 /** Main app navigation layout: "left" = sidebar, "right" = top header only. Synced from theme config. */
 const sidebarPositionOptions = [
-  { label: t("TXT_CODE_settings.layout.sidebar_position.left"), value: "left" as const },
-  { label: t("TXT_CODE_settings.layout.sidebar_position.right"), value: "right" as const }
+  { label: t("TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_LEFT"), value: "left" as const },
+  { label: t("TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_RIGHT"), value: "right" as const }
 ];
 
 const ApacheLicense = `Copyright ${new Date().getFullYear()} MCSManager
@@ -266,7 +266,7 @@ const handleSaveBgUrl = async (url?: string) => {
 /** Persist sidebar position to layout config; reloads the app so initAppTheme picks it up. */
 const handleSaveSidebarPosition = () => {
   Modal.confirm({
-    title: t("TXT_CODE_settings.layout.sidebar_position.save_confirm_title"),
+    title: t("TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_SAVE_CONFIRM_TITLE"),
     content: t("TXT_CODE_cf95364f"),
     async onOk() {
       const cfg = await getSettingsConfig();
@@ -461,10 +461,10 @@ onUnmounted(() => {
                 <a-form :model="formData" layout="vertical">
                   <a-form-item>
                     <a-typography-title :level="5">
-                      {{ t("TXT_CODE_settings.layout.sidebar_position.title") }}
+                      {{ t("TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_TITLE") }}
                     </a-typography-title>
                     <a-typography-paragraph type="secondary">
-                      {{ t("TXT_CODE_settings.layout.sidebar_position.description") }}
+                      {{ t("TXT_CODE_SETTINGS_LAYOUT_SIDEBAR_POSITION_DESCRIPTION") }}
                     </a-typography-paragraph>
                     <a-select v-model:value="sidebarPosition" style="max-width: 320px">
                       <a-select-option

@@ -17,7 +17,6 @@ import {
   LogoutOutlined,
   RedoOutlined,
   SaveOutlined,
-  SketchOutlined,
   UserOutlined
 } from "@ant-design/icons-vue";
 import { message, Modal, notification } from "ant-design-vue";
@@ -120,20 +119,11 @@ export function useHeaderMenus() {
     return [
       {
         iconText: "",
-        title: t("TXT_CODE_b01f8383"),
+        title: "GitHub",
         icon: GithubFilled,
-        conditions: !isProMode.value,
         onlyPC: true,
+        onlyHeader: true,
         click: onClickIcon
-      },
-      {
-        iconText: t("TXT_CODE_80f0904e"),
-        title: t("TXT_CODE_b6c675d6"),
-        icon: SketchOutlined,
-        click: onClickIcon,
-        conditions: isProMode.value,
-        onlyPC: true,
-        customClass: ["nav-button-success"]
       },
       {
         title: t("TXT_CODE_8b0f8aab"),
@@ -271,7 +261,7 @@ export function useHeaderMenus() {
     }));
     const divider: SidebarDividerEntry = { type: "divider" };
     const appEntries: (SidebarAppEntry | SidebarAppDropdownEntry)[] = appMenus.value
-      .filter((item) => item.conditions)
+      .filter((item) => item.conditions && !item.onlyHeader)
       .map((item) => {
         if (item.menus && item.menus.length > 0) {
           return {
