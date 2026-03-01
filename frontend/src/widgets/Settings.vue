@@ -8,7 +8,9 @@ import { router } from "@/config/router";
 import { SUPPORTED_LANGS, isCN, t } from "@/lang/i18n";
 import { setSettingInfo, settingInfo } from "@/services/apis";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
+import { useLayoutConfigStore } from "@/stores/useLayoutConfig";
 import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
+import { arrayFilter } from "@/tools/array";
 import { reportErrorMsg } from "@/tools/validator";
 import type { LayoutCard, Settings } from "@/types";
 import {
@@ -27,8 +29,6 @@ import {
 } from "@ant-design/icons-vue";
 import { Modal, message, notification } from "ant-design-vue";
 import { onMounted, onUnmounted, ref } from "vue";
-import { useLayoutConfigStore } from "@/stores/useLayoutConfig";
-import { arrayFilter } from "@/tools/array";
 
 defineProps<{
   card: LayoutCard;
@@ -47,6 +47,12 @@ interface MySettings extends Settings {
   proLicenseKey?: string;
 }
 
+/** Main app navigation layout: "left" = sidebar, "right" = top header only. Synced from theme config. */
+const sidebarPositionOptions = [
+  { label: t("TXT_CODE_settings.layout.sidebar_position.left"), value: "left" as const },
+  { label: t("TXT_CODE_settings.layout.sidebar_position.right"), value: "right" as const }
+];
+
 const ApacheLicense = `Copyright ${new Date().getFullYear()} MCSManager
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,6 +68,9 @@ See the License for the specific language governing permissions and
 limitations under the License.`;
 
 const formData = ref<MySettings>();
+
+/** Current sidebar position choice; persisted in layout config theme. */
+const sidebarPosition = ref<"left" | "right">("left");
 
 const submit = async (needReload: boolean = true) => {
   if (formData.value) {
@@ -254,6 +263,26 @@ const handleSaveBgUrl = async (url?: string) => {
   });
 };
 
+/** Persist sidebar position to layout config; reloads the app so initAppTheme picks it up. */
+const handleSaveSidebarPosition = () => {
+  Modal.confirm({
+    title: t("TXT_CODE_settings.layout.sidebar_position.save_confirm_title"),
+    content: t("TXT_CODE_cf95364f"),
+    async onOk() {
+      const cfg = await getSettingsConfig();
+      if (!cfg) {
+        return reportErrorMsg(t("TXT_CODE_b89780e2"));
+      }
+      if (!cfg.theme) {
+        cfg.theme = { pageTitle: "", logoImage: "", backgroundImage: "" };
+      }
+      cfg.theme.sidebarPosition = sidebarPosition.value;
+      await setSettingsConfig(cfg);
+      message.success(t("TXT_CODE_a7907771"));
+    }
+  });
+};
+
 const startDesignUI = async () => {
   changeDesignMode(true);
   notification.warning({
@@ -296,6 +325,9 @@ onMounted(async () => {
     formData.value.pageTitle = cfg.theme.pageTitle;
   } else {
     formData.value.pageTitle = t("TXT_CODE_47ae8ee6");
+  }
+  if (cfg?.theme?.sidebarPosition === "left" || cfg?.theme?.sidebarPosition === "right") {
+    sidebarPosition.value = cfg.theme.sidebarPosition;
   }
   setTimeout(() => {
     if (router.currentRoute.value.query.tab === "pro") {
@@ -427,6 +459,32 @@ onUnmounted(() => {
               </a-typography-title>
               <div style="text-align: left">
                 <a-form :model="formData" layout="vertical">
+                  <a-form-item>
+                    <a-typography-title :level="5">
+                      {{ t("TXT_CODE_settings.layout.sidebar_position.title") }}
+                    </a-typography-title>
+                    <a-typography-paragraph type="secondary">
+                      {{ t("TXT_CODE_settings.layout.sidebar_position.description") }}
+                    </a-typography-paragraph>
+                    <a-select v-model:value="sidebarPosition" style="max-width: 320px">
+                      <a-select-option
+                        v-for="opt in sidebarPositionOptions"
+                        :key="opt.value"
+                        :value="opt.value"
+                      >
+                        {{ opt.label }}
+                      </a-select-option>
+                    </a-select>
+                    <a-button
+                      type="primary"
+                      class="ml-6 mt-2"
+                      :loading="submitIsLoading"
+                      @click="handleSaveSidebarPosition"
+                    >
+                      {{ t("TXT_CODE_abfe9512") }}
+                    </a-button>
+                  </a-form-item>
+
                   <a-form-item>
                     <a-typography-title :level="5">{{ t("TXT_CODE_395f147d") }}</a-typography-title>
                     <a-typography-paragraph type="secondary">

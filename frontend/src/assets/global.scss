@@ -77,6 +77,11 @@ body {
   margin: auto;
 }
 
+/* When main nav is header-only (no left sidebar), container stays full width. */
+.app-layout-header-only {
+  /* Reserved for layout overrides if needed. */
+}
+
 @media (max-width: 1410px) {
   .global-app-container {
     margin: 0px 24px;

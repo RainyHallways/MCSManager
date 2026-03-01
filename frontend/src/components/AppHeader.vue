@@ -8,7 +8,6 @@ import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
 import { useScroll } from "@vueuse/core";
 import { computed, h, onMounted } from "vue";
 import { useLayoutConfigStore } from "../stores/useLayoutConfig";
-import Breadcrumbs from "./Breadcrumbs.vue";
 import CardPanel from "./CardPanel.vue";
 
 const { getSettingsConfig } = useLayoutConfigStore();
@@ -174,8 +173,6 @@ const openPhoneMenu = (b = false) => {
       </div>
     </div>
   </a-drawer>
-
-  <Breadcrumbs />
 </template>
 
 <style lang="scss" scoped>

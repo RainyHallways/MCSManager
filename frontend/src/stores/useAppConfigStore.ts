@@ -35,6 +35,10 @@ export const useAppConfigStore = createGlobalState(() => {
   });
 
   const hasBgImage = ref(false);
+
+  /** Main app nav layout: "left" = sidebar, "right" = top header only. Filled by initAppTheme(). */
+  const sidebarPosition = ref<"left" | "right">("left");
+
   const setBackgroundImage = (url: string) => {
     const body = document.querySelector("body");
     if (body) {
@@ -87,6 +91,8 @@ export const useAppConfigStore = createGlobalState(() => {
     const frontendSettings = await getSettingsConfig();
     if (frontendSettings?.theme?.backgroundImage)
       setBackgroundImage(frontendSettings.theme.backgroundImage);
+    const pos = frontendSettings?.theme?.sidebarPosition;
+    sidebarPosition.value = pos === "left" || pos === "right" ? pos : "left";
   };
 
   const setTheme = (t: AppTheme) => {
@@ -118,6 +124,7 @@ export const useAppConfigStore = createGlobalState(() => {
     appConfig,
     logoImage,
     hasBgImage,
+    sidebarPosition,
     setLogoImage,
     changeLanguage,
     getCurrentLanguage,
