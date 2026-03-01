@@ -84,7 +84,7 @@ const title = computed(() =>
 );
 const { isPhone } = useScreen();
 
-// form - 合并后的统一表单
+// Unified form (merged instance + template)
 const formRef = ref<FormInstance>();
 const formData = ref<CombinedFormData>({
   instance: {},

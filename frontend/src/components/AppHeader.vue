@@ -18,7 +18,7 @@ const { setLogoImage, logoImage } = useAppConfigStore();
 
 const { menus, appMenus, handleToPage } = useHeaderMenus();
 
-/** 判断路由菜单项是否处于激活状态（当前页面与该 path 一致或是其子路径） */
+/** Whether route menu item is active (current path equals or is child of this path) */
 const isRouteActive = (path: string): boolean => {
   if (route.path === path) return true;
   if (path === "/") return false;
@@ -261,7 +261,7 @@ const openPhoneMenu = (b = false) => {
 
   z-index: 20;
 
-  // 添加平滑过渡效果
+  // Smooth height transition
   transition: height 0.3s ease-in-out;
 
   .app-header-content {
@@ -273,7 +273,7 @@ const openPhoneMenu = (b = false) => {
     width: 100%;
     height: var(--header-height);
 
-    // 添加平滑过渡效果
+    // Smooth height transition
     transition: height 0.3s ease-in-out;
 
     .btns {

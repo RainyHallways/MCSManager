@@ -74,7 +74,7 @@ declare global {
   }
 
   interface IGlobalInstanceDockerConfig {
-    /** 执行更新命令时使用的 Docker 镜像，留空表示不使用镜像 */
+    /** Docker image for update command; empty = not used */
     updateCommandImage?: string;
     containerName?: string;
     image?: string;

@@ -23,10 +23,10 @@ import { message, Modal, notification } from "ant-design-vue";
 import type { Component } from "vue";
 import { computed } from "vue";
 
-/** 侧边栏单项：分隔线 */
+/** Sidebar item: divider */
 export type SidebarDividerEntry = { type: "divider" };
 
-/** 侧边栏单项：路由链接 */
+/** Sidebar item: route link */
 export type SidebarRouteEntry = {
   type: "route";
   path: string;
@@ -34,7 +34,7 @@ export type SidebarRouteEntry = {
   customClass?: string[];
 };
 
-/** 侧边栏单项：应用菜单（无子菜单） */
+/** Sidebar item: app menu (no submenu) */
 export type SidebarAppEntry = {
   type: "app";
   title: string;
@@ -43,15 +43,15 @@ export type SidebarAppEntry = {
   click: () => void;
 };
 
-/** 侧边栏单项：应用菜单（有子菜单下拉） */
+/** Sidebar item: app menu with dropdown */
 export type SidebarAppDropdownEntry = {
   type: "app-dropdown";
   title: string;
   icon?: Component;
   customClass?: string[];
   menus: { value: string | number; title: string }[];
-  // 参数名仅用于类型语义，overlay 中会传入 key
-  // eslint-disable-next-line no-unused-vars -- 类型声明中的形参
+  // Param name for type semantics only; overlay passes key
+  // eslint-disable-next-line no-unused-vars -- type param name
   click: (menuKey: string) => void;
 };
 
@@ -251,7 +251,7 @@ export function useHeaderMenus() {
     ];
   });
 
-  /** 侧边栏统一配置：路由菜单 + 分隔线 + 应用菜单，由同一套模板循环渲染 */
+  /** Sidebar config: route menu + divider + app menu, rendered in one loop */
   const sidebarItems = computed((): SidebarEntry[] => {
     const routeEntries: SidebarRouteEntry[] = menus.value.map((r) => ({
       type: "route",
@@ -270,7 +270,7 @@ export function useHeaderMenus() {
             icon: item.icon,
             customClass: item.customClass,
             menus: item.menus,
-            // eslint-disable-next-line no-unused-vars -- 类型断言中的形参名
+            // eslint-disable-next-line no-unused-vars -- type assertion param name
             click: item.click as (menuKey: string) => void
           };
         }

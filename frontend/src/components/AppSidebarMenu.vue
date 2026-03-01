@@ -25,14 +25,14 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const { sidebarItems, handleToPage } = useHeaderMenus();
 
-/** 判断路由菜单项是否处于激活状态（当前页面与该 path 一致或是其子路径） */
+/** Whether route menu item is active (current path equals or is child of this path) */
 const isRouteActive = (path: string): boolean => {
   if (route.path === path) return true;
   if (path === "/") return false;
   return route.path.startsWith(path + "/");
 };
 
-/** 路由 path 对应的侧边栏图标 */
+/** Sidebar icon for each route path */
 const routePathIcons: Record<string, Component> = {
   "/instances": AppstoreOutlined,
   "/market": ShopOutlined,
@@ -73,10 +73,10 @@ const { logoImage } = useAppConfigStore();
 
       <div class="sidebar-menu-section">
         <template v-for="(entry, index) in sidebarItems" :key="getItemKey(entry, index)">
-          <!-- 分隔线 -->
+          <!-- Divider -->
           <div v-if="entry.type === 'divider'" class="sidebar-divider" />
 
-          <!-- 路由链接 -->
+          <!-- Route link -->
           <a
             v-else-if="entry.type === 'route'"
             class="sidebar-item"
@@ -87,7 +87,7 @@ const { logoImage } = useAppConfigStore();
             <span class="sidebar-item-text">{{ entry.name }}</span>
           </a>
 
-          <!-- 应用菜单（下拉） -->
+          <!-- App menu (dropdown) -->
           <a-dropdown
             v-else-if="entry.type === 'app-dropdown'"
             trigger="click"
@@ -106,7 +106,7 @@ const { logoImage } = useAppConfigStore();
             </template>
           </a-dropdown>
 
-          <!-- 应用菜单（单点） -->
+          <!-- App menu (single click) -->
           <a
             v-else-if="entry.type === 'app'"
             class="sidebar-item"
@@ -211,7 +211,7 @@ const { logoImage } = useAppConfigStore();
   flex-shrink: 0;
 }
 
-/* 与 AppHeader 一致的语义化高亮 */
+/* Same semantic highlight as AppHeader */
 :deep(.nav-button-warning:hover) {
   background-color: rgba(255, 193, 7, 0.2) !important;
 }
