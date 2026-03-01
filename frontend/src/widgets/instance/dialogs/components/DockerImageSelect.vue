@@ -33,7 +33,7 @@ const loadImages = async () => {
   loading.value = true;
   dockerImages.value = arrayFilter([
     {
-      label: props.isAllowText ?? t("空"),
+      label: props.isAllowText ?? t("TXT_CODE_79d4205"),
       value: "",
       condition: () => props.isAllowEmpty
     },

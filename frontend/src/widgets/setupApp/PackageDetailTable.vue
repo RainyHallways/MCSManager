@@ -146,7 +146,7 @@ function platformDisplayText(platform: string): string {
       <template v-else-if="column.key === 'action'">
         <Flex gap="small" align="center" justify="center">
           <a-button type="link" size="small" @click="openConfigModal(record)">
-            {{ t("查看配置") }}
+            {{ t("TXT_CODE_ee5cd485") }}
           </a-button>
           <a-button type="primary" size="small" @click="emit('select', record)">
             <template #icon>
@@ -173,7 +173,7 @@ function platformDisplayText(platform: string): string {
 
   <a-modal
     v-model:open="configModalVisible"
-    :title="t('查看配置')"
+    :title="t('TXT_CODE_ee5cd485')"
     width="900px"
     :footer="null"
     destroy-on-close

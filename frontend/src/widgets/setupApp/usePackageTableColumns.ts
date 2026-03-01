@@ -47,7 +47,7 @@ function buildColumnDefs(): PackageTableColumnDef[] {
     {
       key: "platform",
       dataIndex: "platform",
-      title: t("系统要求"),
+      title: t("TXT_CODE_387e9722"),
       width: 90,
       align: "center",
       useTag: true
@@ -55,7 +55,7 @@ function buildColumnDefs(): PackageTableColumnDef[] {
     {
       key: "runtime",
       dataIndex: "runtime",
-      title: t("运行环境"),
+      title: t("TXT_CODE_c71dc792"),
       width: 90,
       maxWidth: 180,
       align: "center"
@@ -63,7 +63,7 @@ function buildColumnDefs(): PackageTableColumnDef[] {
     {
       key: "tags",
       dataIndex: "tags",
-      title: t("标签"),
+      title: t("TXT_CODE_eaabd222"),
       width: 100,
       align: "center",
       useTag: true
@@ -71,7 +71,7 @@ function buildColumnDefs(): PackageTableColumnDef[] {
     {
       key: "remark",
       dataIndex: "remark",
-      title: t("备注"),
+      title: t("TXT_CODE_b8e8e6f5"),
       width: 100,
       maxWidth: 180,
       align: "center"
@@ -79,7 +79,7 @@ function buildColumnDefs(): PackageTableColumnDef[] {
     {
       key: "author",
       dataIndex: "author",
-      title: t("贡献者"),
+      title: t("TXT_CODE_7c441b9"),
       width: 90,
       align: "center"
     },

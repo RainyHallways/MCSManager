@@ -265,7 +265,7 @@ const createInstance = async () => {
         <a-col :xs="24" :md="12">
           <a-form-item>
             <a-typography-title :level="5" class="require-field">
-              {{ t("Docker 镜像名") }}
+              {{ t("TXT_CODE_d12f5b1c") }}
             </a-typography-title>
             <a-typography-paragraph>
               <a-typography-text type="secondary">
@@ -311,7 +311,7 @@ const createInstance = async () => {
         <a-col :xs="24" :sm="12">
           <a-form-item name="cwd">
             <a-typography-title :level="5">
-              {{ t("宿主机工作目录") }}
+              {{ t("TXT_CODE_20d110b3") }}
             </a-typography-title>
             <a-typography-paragraph>
               <a-typography-text type="secondary">
@@ -368,7 +368,7 @@ const createInstance = async () => {
 
       <a-form-item>
         <!-- Update Command -->
-        <a-typography-title :level="5">{{ t("安装服务端命令") }}</a-typography-title>
+        <a-typography-title :level="5">{{ t("TXT_CODE_2e2c6b7b") }}</a-typography-title>
         <a-typography-paragraph>
           <a-typography-text type="secondary" class="typography-text-ellipsis">
             {{ t("TXT_CODE_4f387c5a") }}
@@ -379,7 +379,7 @@ const createInstance = async () => {
           v-model:value="formData.updateCommand"
           :rows="2"
           style="min-height: 30px"
-          :placeholder="$t('可选，列如: steamcmd install ....')"
+          :placeholder="$t('TXT_CODE_36bd6348')"
         />
       </a-form-item>
 

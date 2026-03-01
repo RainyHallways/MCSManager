@@ -868,25 +868,24 @@ defineExpose({
               <a-col :xs="24" :lg="12" :offset="0">
                 <a-form-item>
                   <a-typography-title :level="5">
-                    {{ t("使用镜像执行更新命令") }}
+                    {{ t("TXT_CODE_a3bcd4b5") }}
                   </a-typography-title>
                   <a-typography-paragraph>
-                    <a-tooltip
-                      :title="t('可以选择更新命令专用的镜像，与运行的镜像分开。')"
-                      placement="top"
-                    >
+                    <a-tooltip :title="t('TXT_CODE_3bbdf523')" placement="top">
                       <a-typography-text type="secondary" :class="['typography-text-ellipsis']">
-                        {{ t("可以选择更新命令专用的镜像，与运行的镜像分开。") }}
+                        {{ t("TXT_CODE_3bbdf523") }}
                       </a-typography-text>
                     </a-tooltip>
                   </a-typography-paragraph>
                   <DockerImageSelect
                     :is-allow-empty="true"
-                    :is-allow-text="t('继承运行时镜像')"
+                    :is-allow-text="t('TXT_CODE_8aca7994')"
                     :model-value="formData.instance.config?.docker?.updateCommandImage ?? ''"
                     :image-select-method="formData.instance.imageSelectMethod ?? 'SELECT'"
                     :daemon-id="daemonId ?? ''"
-                    @update:model-value="(v) => (formData.instance.config!.docker!.updateCommandImage = v)"
+                    @update:model-value="
+                      (v) => (formData.instance.config!.docker!.updateCommandImage = v)
+                    "
                     @update:image-select-method="(v) => (formData.instance.imageSelectMethod = v)"
                   />
                 </a-form-item>
