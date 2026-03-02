@@ -76,7 +76,6 @@ const getImagePlatformsFromDockerHub = async (imageName: string): Promise<string
 };
 
 const handleSelectTemplate = async (item: QuickStartPackages | null) => {
-  console.debug("选择", item);
   if (!item) return;
   selectedTemplate.value = item;
   showTemplateNameDialog.value = true;
@@ -91,7 +90,6 @@ const handleTemplateConfirm = async (instanceName: string, template: QuickStartP
       }
     };
 
-    console.debug("template.dockerOptional", template.dockerOptional);
     if (template.dockerOptional) {
       const useDockerVersion = await openDockerVersionSelectDialog();
       if (useDockerVersion === 2) {
