@@ -75,6 +75,27 @@ const getImagePlatformsFromDockerHub = async (imageName: string): Promise<string
   }
 };
 
+/**
+ * Called when user clicks a Category 1 card.
+ * If no daemon node is pre-configured, prompt for node selection first,
+ * then navigate into the Category 2 detail view.
+ */
+const handleSelectCategory = async (item: QuickStartPackages) => {
+  try {
+    if (!daemonId) {
+      const node = await openNodeSelectDialog();
+      if (!node) {
+        reportErrorMsg(t("TXT_CODE_2de92a5d"));
+        return;
+      }
+      daemonId = node.uuid;
+    }
+    appPackages.value?.handleSelectTopCategory(item);
+  } catch (err: any) {
+    console.error(err);
+  }
+};
+
 const handleSelectTemplate = async (item: QuickStartPackages | null) => {
   if (!item) return;
   selectedTemplate.value = item;
@@ -112,8 +133,6 @@ const handleTemplateConfirm = async (instanceName: string, template: QuickStartP
           targetPlatforms = undefined;
         }
       }
-
-      console.debug("targetPlatforms", targetPlatforms);
 
       const node = await openNodeSelectDialog(targetPlatforms);
       if (!node) {
@@ -170,7 +189,11 @@ const startDownloadTask = async () => {
 
 <template>
   <div style="height: 100%">
-    <AppPackages ref="appPackages" @handle-select-template="handleSelectTemplate" />
+    <AppPackages
+      ref="appPackages"
+      @handle-select-category="handleSelectCategory"
+      @handle-select-template="handleSelectTemplate"
+    />
     <TemplateNameDialog
       v-model:open="showTemplateNameDialog"
       :template="selectedTemplate"

@@ -16,6 +16,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "handle-select-template": [item: QuickStartPackages | null];
+  "handle-select-category": [item: QuickStartPackages];
 }>();
 
 const {
@@ -39,13 +40,18 @@ const handleBackToCategory = () => {
   searchForm.gameType = SEARCH_ALL_KEY;
 };
 
+const onCategoryCardClick = (item: QuickStartPackages) => {
+  emit("handle-select-category", item);
+};
+
 onMounted(() => {
   fetchTemplate();
 });
 
 defineExpose({
   appList,
-  fetchTemplate
+  fetchTemplate,
+  handleSelectTopCategory
 });
 </script>
 
@@ -84,6 +90,7 @@ defineExpose({
       </a-button>
     </a-col>
 
+    <!-- Category 2: Detail list: search bar -->
     <a-col :span="24">
       <div class="detail-search-bar">
         <a-select
@@ -117,7 +124,7 @@ defineExpose({
       </div>
     </a-col>
 
-    <!-- Detail list: table with back-to-category and search conditions -->
+    <!-- Category 2: Detail list: table with back-to-category and search conditions -->
     <template v-else-if="detailList.length > 0">
       <a-col :span="24">
         <PackageDetailTable
@@ -128,7 +135,7 @@ defineExpose({
       </a-col>
     </template>
 
-    <!-- Category view: card grid -->
+    <!-- Category 1: Category cards -->
     <fade-up-animation v-else :delay="60">
       <a-col
         v-for="(item, index) in appList"
@@ -142,7 +149,7 @@ defineExpose({
         <div
           class="package-image-container-summary global-card-container-shadow"
           style="overflow: hidden; cursor: pointer"
-          @click="handleSelectTopCategory(item)"
+          @click="onCategoryCardClick(item)"
         >
           <div class="package-image-container" style="border-radius: 0">
             <img
