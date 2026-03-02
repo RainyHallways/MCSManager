@@ -3313,5 +3313,13 @@
   "TXT_CODE_system_instance_control.illegalName": "非法的计划名，仅支持下划线，数字，字母和部分本地语言",
   "TXT_CODE_ui.help": "[终端] 守护进程拥有基本的交互功能，请输入\"help\"查看更多信息",
   "TXT_CODE_update_cmd_no_image": "不使用镜像（宿主机执行）",
-  "TXT_CODE_version.versionDetectErr": "版本检查失败"
+  "TXT_CODE_version.versionDetectErr": "版本检查失败",
+  "TXT_CODE_docker_version_select_title": "安装方式选择",
+  "TXT_CODE_docker_version_select_desc": "该模板支持普通版与 Docker 版，选择 Docker 版后将覆盖为 Docker 推荐配置。",
+  "TXT_CODE_docker_version_select_docker_title": "使用 Docker 镜像部署",
+  "TXT_CODE_docker_version_select_docker_subtitle": "Docker 部署需要额外安装 Docker 软件，但是无需在主机上自己再安装任何环境，是 Linux 系统的首选。",
+  "TXT_CODE_docker_version_select_docker_btn": "使用 Docker 版",
+  "TXT_CODE_docker_version_select_normal_title": "直接安装到主机",
+  "TXT_CODE_docker_version_select_normal_subtitle": "普通安装方式则相当于裸奔在机器上，你需要自己安装运行环境，比如 Java 环境，Python 环境。",
+  "TXT_CODE_docker_version_select_normal_btn": "使用普通版"
 }

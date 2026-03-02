@@ -267,6 +267,10 @@ declare global {
     remark: string;
     targetLink?: string;
     author: string;
+    dockerOptional?: {
+      image: string;
+      updateCommandImage?: string;
+    };
     setupInfo: IGlobalInstanceConfig;
     gameType: string;
     image: string;

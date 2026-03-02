@@ -3313,5 +3313,13 @@
   "TXT_CODE_system_instance_control.illegalName": "Illegal task name. Only underscores, numbers, letters, and some local language characters are supported. It's safest to stick to alphanumeric characters.",
   "TXT_CODE_ui.help": "[Terminal] The daemon has basic interactive functionality. Please enter 'help' for more information.",
   "TXT_CODE_update_cmd_no_image": "Do not use image (run on host)",
-  "TXT_CODE_version.versionDetectErr": "Version Check Failed"
+  "TXT_CODE_version.versionDetectErr": "Version Check Failed",
+  "TXT_CODE_docker_version_select_title": "Choose Installation Method",
+  "TXT_CODE_docker_version_select_desc": "This template supports both standard and Docker modes. Choosing Docker mode will override with Docker-recommended settings.",
+  "TXT_CODE_docker_version_select_docker_title": "Docker Environment Deployment",
+  "TXT_CODE_docker_version_select_docker_subtitle": "Docker deployment requires installing Docker, but you do not need to install runtime environments on the host. It is the preferred choice for Linux systems.",
+  "TXT_CODE_docker_version_select_docker_btn": "Use Docker Mode",
+  "TXT_CODE_docker_version_select_normal_title": "Standard Deployment",
+  "TXT_CODE_docker_version_select_normal_subtitle": "Standard installation runs directly on the host. You need to install runtime environments yourself, such as Java or Python.",
+  "TXT_CODE_docker_version_select_normal_btn": "Use Standard Mode"
 }

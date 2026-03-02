@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { openNodeSelectDialog } from "@/components/fc";
+import { openDockerVersionSelectDialog, openNodeSelectDialog } from "@/components/fc";
 import { router } from "@/config/router";
 import { useLayoutCardTools } from "@/hooks/useCardTools";
 import { t } from "@/lang/i18n";
@@ -61,12 +61,12 @@ const getImagePlatformsFromDockerHub = async (imageName: string): Promise<string
 
     // execute() returns state (a ref), so we need to access .value
     const platforms = state.value;
-    
+
     // Ensure we return an array
     if (Array.isArray(platforms)) {
       return platforms;
     }
-    
+
     return [];
   } catch (error: any) {
     // If we can't get platforms, return empty array (no filtering)
@@ -76,6 +76,7 @@ const getImagePlatformsFromDockerHub = async (imageName: string): Promise<string
 };
 
 const handleSelectTemplate = async (item: QuickStartPackages | null) => {
+  console.debug("选择", item);
   if (!item) return;
   selectedTemplate.value = item;
   showTemplateNameDialog.value = true;
@@ -83,17 +84,38 @@ const handleSelectTemplate = async (item: QuickStartPackages | null) => {
 
 const handleTemplateConfirm = async (instanceName: string, template: QuickStartPackages) => {
   try {
+    const setupInfo: IGlobalInstanceConfig = {
+      ...template.setupInfo,
+      docker: {
+        ...template.setupInfo.docker
+      }
+    };
+
+    console.debug("template.dockerOptional", template.dockerOptional);
+    if (template.dockerOptional) {
+      const useDockerVersion = await openDockerVersionSelectDialog();
+      if (useDockerVersion === 2) {
+        setupInfo.docker = {
+          ...setupInfo.docker,
+          ...template.dockerOptional
+        };
+        setupInfo.processType = "docker";
+      }
+    }
+
     if (!daemonId) {
       // get image platforms if this is a Docker template
       let targetPlatforms: string[] | undefined;
-      if (template.setupInfo?.docker?.image) {
-        targetPlatforms = await getImagePlatformsFromDockerHub(template.setupInfo.docker.image);
-        
+      if (setupInfo?.docker?.image) {
+        targetPlatforms = await getImagePlatformsFromDockerHub(setupInfo.docker.image);
+
         // only use platforms if we successfully got them
         if (!targetPlatforms || targetPlatforms.length === 0) {
           targetPlatforms = undefined;
         }
       }
+
+      console.debug("targetPlatforms", targetPlatforms);
 
       const node = await openNodeSelectDialog(targetPlatforms);
       if (!node) {
@@ -102,6 +124,7 @@ const handleTemplateConfirm = async (instanceName: string, template: QuickStartP
       }
       daemonId = node.uuid;
     }
+
     await executeCreateAsyncTask({
       params: {
         daemonId,
@@ -112,7 +135,7 @@ const handleTemplateConfirm = async (instanceName: string, template: QuickStartP
         time: Date.now(),
         newInstanceName: instanceName,
         targetLink: template.targetLink || "",
-        setupInfo: template.setupInfo
+        setupInfo
       }
     });
     installView.value = true;
