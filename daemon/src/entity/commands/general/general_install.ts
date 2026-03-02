@@ -33,8 +33,12 @@ export default class GeneralInstallCommand extends InstanceCommand {
       }
       instance.println($t("TXT_CODE_1704ea49"), $t("TXT_CODE_906c5d6a"));
 
-      if (params.setupInfo.processType !== "docker" && instance.config.processType === "docker") {
-        throw new Error($t("为确保环境隔离，Docker 类型的实例禁止重装为非 Docker 类型！"));
+      if (params.dockerOptional && instance.config.processType === "docker") {
+        params.setupInfo.docker = {
+          ...params.setupInfo.docker,
+          ...params.dockerOptional
+        };
+        params.setupInfo.processType = "docker";
       }
 
       // The "params" configuration has already been checked in router.post("/install_instance")

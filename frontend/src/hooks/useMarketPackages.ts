@@ -101,7 +101,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     }
 
     return packages.value.filter((item) => {
-      if (onlyDockerTemplate && !item.setupInfo?.docker) {
+      if (onlyDockerTemplate && !item.setupInfo?.docker && !item?.dockerOptional) {
         return false;
       }
 
