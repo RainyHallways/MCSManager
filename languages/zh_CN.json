@@ -3315,7 +3315,7 @@
   "TXT_CODE_update_cmd_no_image": "不使用镜像（宿主机执行）",
   "TXT_CODE_version.versionDetectErr": "版本检查失败",
   "TXT_CODE_docker_version_select_title": "安装方式选择",
-  "TXT_CODE_docker_version_select_desc": "该模板支持普通版与 Docker 版，选择 Docker 版后将覆盖为 Docker 推荐配置。",
+  "TXT_CODE_docker_version_select_desc": "我们检测到你的系统已安装 Docker，请问是否选择 Docker 版本？",
   "TXT_CODE_docker_version_select_docker_title": "使用 Docker 镜像部署",
   "TXT_CODE_docker_version_select_docker_subtitle": "Docker 部署需要额外安装 Docker 软件，但是无需在主机上自己再安装任何环境，是 Linux 系统的首选。",
   "TXT_CODE_docker_version_select_docker_btn": "使用 Docker 版",

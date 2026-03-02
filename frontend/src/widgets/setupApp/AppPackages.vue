@@ -15,8 +15,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  "handle-select-template": [item: QuickStartPackages | null];
+  "handle-select-template": [item: QuickStartPackages, type: "normal" | "docker"];
   "handle-select-category": [item: QuickStartPackages];
+  "handle-back-to-category": [];
 }>();
 
 const {
@@ -38,10 +39,16 @@ const detailList = computed(() => (isCategoryView.value ? [] : appList.value));
 
 const handleBackToCategory = () => {
   searchForm.gameType = SEARCH_ALL_KEY;
+  searchForm.platform = SEARCH_ALL_KEY;
+  emit("handle-back-to-category");
 };
 
 const onCategoryCardClick = (item: QuickStartPackages) => {
   emit("handle-select-category", item);
+};
+
+const onTemplateSelect = (item: QuickStartPackages, type: "normal" | "docker") => {
+  emit("handle-select-template", item, type);
 };
 
 onMounted(() => {
@@ -81,11 +88,7 @@ defineExpose({
   <!-- Main content - package marketplace interface -->
   <a-row v-else :gutter="[16, 16]" style="height: 100%">
     <a-col v-if="showCustomBtn" :span="24" :md="24" class="justify-end">
-      <a-button
-        type="link"
-        style="margin: 0; padding: 0"
-        @click="emit('handle-select-template', null)"
-      >
+      <a-button type="link" style="margin: 0; padding: 0">
         {{ t("TXT_CODE_181c72ba") }}
       </a-button>
     </a-col>
@@ -130,7 +133,7 @@ defineExpose({
         <PackageDetailTable
           :data-source="detailList"
           :btn-text="btnText"
-          @select="(item) => emit('handle-select-template', item)"
+          @select="(item, type) => onTemplateSelect(item, type)"
         />
       </a-col>
     </template>

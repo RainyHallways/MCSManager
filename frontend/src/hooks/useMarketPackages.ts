@@ -4,6 +4,7 @@ import { reportErrorMsg } from "@/tools/validator";
 import type { QuickStartPackages } from "@/types";
 import { Modal } from "ant-design-vue";
 import { computed, reactive, ref } from "vue";
+import type { ComputedNodeInfo } from "./useOverviewInfo";
 
 // Constants
 export const SEARCH_ALL_KEY = "ALL";
@@ -21,6 +22,8 @@ export interface SearchForm {
   platform: string;
   /** Fuzzy search keyword for package name/title and description */
   keyword: string;
+  isSupportDocker: boolean;
+  system: "win" | "linux";
 }
 
 export interface UseMarketPackagesOptions {
@@ -40,7 +43,9 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     category: SEARCH_ALL_KEY,
     gameType: SEARCH_ALL_KEY,
     platform: SEARCH_ALL_KEY,
-    keyword: ""
+    keyword: "",
+    isSupportDocker: false,
+    system: "linux"
   });
 
   // Generic filter condition checker function
@@ -49,7 +54,11 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     field: keyof QuickStartPackages,
     filterValue: string
   ): boolean => {
-    return filterValue === SEARCH_ALL_KEY || item[field] === filterValue;
+    return (
+      filterValue === SEARCH_ALL_KEY ||
+      item[field] === filterValue ||
+      item[field] === SEARCH_ALL_KEY
+    );
   };
 
   // Specific filter functions
@@ -66,6 +75,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
   };
 
   const matchesPlatformFilter = (item: QuickStartPackages): boolean => {
+    console.debug("matchesFilterCondition", item.platform, "platform", searchForm.platform);
     return matchesFilterCondition(item, "platform", searchForm.platform);
   };
 
@@ -78,14 +88,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     if (!k) return true;
     const lower = k.toLowerCase();
     const record = item as unknown as Record<string, unknown>;
-    const textFields: string[] = [
-      item.title ?? "",
-      item.description ?? "",
-      String(record["title-zh_cn"] ?? ""),
-      String(record["title-en_us"] ?? ""),
-      String(record["description-zh_cn"] ?? ""),
-      String(record["description-en_us"] ?? "")
-    ];
+    const textFields: string[] = [item.title ?? "", item.description ?? ""];
     return textFields.some((t) => t.toLowerCase().includes(lower));
   };
 
@@ -237,7 +240,7 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     searchForm.language = SEARCH_ALL_KEY;
     searchForm.gameType = SEARCH_ALL_KEY;
     searchForm.category = SEARCH_ALL_KEY;
-    searchForm.platform = SEARCH_ALL_KEY;
+    // searchForm.platform = SEARCH_ALL_KEY;
     searchForm.keyword = "";
   };
 
@@ -256,8 +259,10 @@ export function useMarketPackages(options: UseMarketPackagesOptions = {}) {
     searchForm.category = SEARCH_ALL_KEY;
   };
 
-  const handleSelectTopCategory = (item: QuickStartPackages) => {
+  const handleSelectTopCategory = (item: QuickStartPackages, node?: ComputedNodeInfo) => {
     searchForm.gameType = item.gameType;
+    searchForm.isSupportDocker = node?.dockerPlatforms?.length ? true : false;
+    searchForm.platform = node?.system?.type ?? SEARCH_ALL_KEY;
   };
 
   const { execute: getQuickInstallListAddr, isLoading: appListLoading } = quickInstallListAddr();

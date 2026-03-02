@@ -17,7 +17,7 @@ withDefaults(
 );
 
 const emit = defineEmits<{
-  select: [item: QuickStartPackages];
+  select: [item: QuickStartPackages, type: "normal" | "docker"];
 }>();
 
 const { columns, columnDefs } = usePackageTableColumns();
@@ -148,11 +148,27 @@ function platformDisplayText(platform: string): string {
           <a-button type="link" size="small" @click="openConfigModal(record)">
             {{ t("TXT_CODE_ee5cd485") }}
           </a-button>
-          <a-button type="primary" size="small" @click="emit('select', record)">
+          <a-button type="primary" size="small" @click="emit('select', record, 'normal')">
             <template #icon>
               <DownloadOutlined />
             </template>
-            {{ btnText || t("TXT_CODE_1704ea49") }}
+            <span v-if="!record?.setupInfo?.docker?.image">
+              {{ btnText || t("TXT_CODE_1704ea49") }}
+            </span>
+            <span v-else>
+              {{ t("通过镜像安装") }}
+            </span>
+          </a-button>
+          <a-button
+            v-if="record?.dockerOptional"
+            type="primary"
+            size="small"
+            @click="emit('select', record, 'docker')"
+          >
+            <template #icon>
+              <DownloadOutlined />
+            </template>
+            {{ t("通过镜像安装") }}
           </a-button>
         </Flex>
       </template>

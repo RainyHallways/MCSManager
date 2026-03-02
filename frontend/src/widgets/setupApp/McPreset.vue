@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { openDockerVersionSelectDialog, openNodeSelectDialog } from "@/components/fc";
+import { openNodeSelectDialog } from "@/components/fc";
 import { router } from "@/config/router";
 import { useLayoutCardTools } from "@/hooks/useCardTools";
+import type { ComputedNodeInfo } from "@/hooks/useOverviewInfo";
 import { t } from "@/lang/i18n";
 import { getDockerHubImagePlatforms } from "@/services/apis/envImage";
 import { createAsyncTask } from "@/services/apis/instance";
@@ -20,6 +21,7 @@ const appPackages = ref<InstanceType<typeof AppPackages>>();
 
 const { getMetaOrRouteValue } = useLayoutCardTools(props.card);
 let daemonId = getMetaOrRouteValue("daemonId", false) ?? "";
+let currentNode = ref<ComputedNodeInfo | undefined>(undefined);
 
 const isMarketPage = router.currentRoute.value.path.includes("/market");
 if (isMarketPage) {
@@ -41,6 +43,7 @@ const downloadInfo = ref({
 
 const showTemplateNameDialog = ref(false);
 const selectedTemplate = ref<QuickStartPackages | null>(null);
+const selectedTemplateType = ref<"normal" | "docker">("normal");
 
 const { state: newTaskInfo, execute: executeCreateAsyncTask } = createAsyncTask();
 
@@ -82,23 +85,26 @@ const getImagePlatformsFromDockerHub = async (imageName: string): Promise<string
  */
 const handleSelectCategory = async (item: QuickStartPackages) => {
   try {
+    let node: ComputedNodeInfo | undefined;
     if (!daemonId) {
-      const node = await openNodeSelectDialog();
+      node = await openNodeSelectDialog();
       if (!node) {
         reportErrorMsg(t("TXT_CODE_2de92a5d"));
         return;
       }
       daemonId = node.uuid;
+      currentNode.value = node;
     }
-    appPackages.value?.handleSelectTopCategory(item);
+    appPackages.value?.handleSelectTopCategory(item, node);
   } catch (err: any) {
     console.error(err);
   }
 };
 
-const handleSelectTemplate = async (item: QuickStartPackages | null) => {
+const handleSelectTemplate = async (item: QuickStartPackages | null, type: "normal" | "docker") => {
   if (!item) return;
   selectedTemplate.value = item;
+  selectedTemplateType.value = type;
   showTemplateNameDialog.value = true;
 };
 
@@ -111,15 +117,12 @@ const handleTemplateConfirm = async (instanceName: string, template: QuickStartP
       }
     };
 
-    if (template.dockerOptional) {
-      const useDockerVersion = await openDockerVersionSelectDialog();
-      if (useDockerVersion === 2) {
-        setupInfo.docker = {
-          ...setupInfo.docker,
-          ...template.dockerOptional
-        };
-        setupInfo.processType = "docker";
-      }
+    if (selectedTemplateType.value === "docker") {
+      setupInfo.docker = {
+        ...setupInfo.docker,
+        ...template.dockerOptional
+      };
+      setupInfo.processType = "docker";
     }
 
     if (!daemonId) {
@@ -185,6 +188,11 @@ const startDownloadTask = async () => {
     });
   }, 1000);
 };
+
+const handleBackToCategory = () => {
+  daemonId = "";
+  currentNode.value = undefined;
+};
 </script>
 
 <template>
@@ -193,6 +201,7 @@ const startDownloadTask = async () => {
       ref="appPackages"
       @handle-select-category="handleSelectCategory"
       @handle-select-template="handleSelectTemplate"
+      @handle-back-to-category="handleBackToCategory"
     />
     <TemplateNameDialog
       v-model:open="showTemplateNameDialog"
