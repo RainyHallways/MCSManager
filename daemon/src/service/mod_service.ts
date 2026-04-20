@@ -50,6 +50,20 @@ export class ModService {
     });
   }
 
+  /**
+   * Try to get version from MANIFEST.MF
+   */
+  private async getVersionFromManifest(zip: any, entries: any): Promise<string | null> {
+    const manifestPath = "META-INF/MANIFEST.MF";
+    if (!entries[manifestPath]) return null;
+    const data = await zip.entryData(manifestPath);
+    const content = data.toString();
+    // Use regex to match Implementation-Version or Specification-Version
+    const match = content.match(/Implementation-Version:\s*(.+)/i)
+      || content.match(/Specification-Version:\s*(.+)/i);
+    return match ? match[1].trim() : null;
+  }
+
   private async parseJarMetadata(jarPath: string): Promise<Partial<ModInfo> | null> {
     const zip = new StreamZip.async({ file: jarPath });
     try {
@@ -68,15 +82,22 @@ export class ModService {
         };
       }
 
-      // Forge (mods.toml)
-      if (entries["META-INF/mods.toml"]) {
-        const data = await zip.entryData("META-INF/mods.toml");
+      // Forge (mods.toml) / NeoForge (neoforge.mods.toml)
+      const TOML_FILES = ["META-INF/mods.toml","META-INF/neoforge.mods.toml"];
+      for (const filePath of TOML_FILES) {
+        if (!entries[filePath]) continue;
+        const data = await zip.entryData(filePath);
         const config = toml.parse(data.toString()) as any;
-        const mod = config.mods ? config.mods[0] : {};
+        const mod = config.mods?.[0] || {};
+        // Handle placeholder logic
+        let version = mod.version;
+        if (version === "${file.jarVersion}") {
+         version = await this.getVersionFromManifest(zip, entries) || version;
+        }
         return {
           id: mod.modId,
           name: mod.displayName || mod.modId,
-          version: mod.version,
+          version: version,
           description: mod.description,
           type: "mod"
         };
