@@ -5,8 +5,10 @@ import path from "path";
 import toml from 'smol-toml';
 import yaml from "yaml";
 import downloadManager from "./download_manager";
-import { getFileManager } from "./file_router_service";
+import { resolveMCDRServerRoot } from "./mcdr_service";
 import logger from "./log";
+import InstanceSubsystem from "./system_instance";
+import FileManager from "./system_file";
 
 export interface ModInfo {
   name: string;
@@ -190,7 +192,12 @@ export class ModService {
     if (pageSize < 1) pageSize = 10;
     if (page < 1) page = 1;
 
-    const fileManager = getFileManager(instanceUuid);
+    const instance = InstanceSubsystem.getInstance(instanceUuid)!;
+    const cwd = instance.absoluteCwdPath();
+    const fileManager = new FileManager(
+      resolveMCDRServerRoot(instance.config.type, cwd) ?? cwd,
+      instance.config?.fileCode
+    );
 
     // if (!FileManager.checkFileName(folder ?? "")) {
     //   throw new Error("Invalid folder name");
@@ -308,7 +315,12 @@ export class ModService {
   }
 
   public async toggleMod(instanceUuid: string, fileName: string): Promise<void> {
-    const fileManager = getFileManager(instanceUuid);
+    const instance = InstanceSubsystem.getInstance(instanceUuid)!;
+    const cwd = instance.absoluteCwdPath();
+    const fileManager = new FileManager(
+      resolveMCDRServerRoot(instance.config.type, cwd) ?? cwd,
+      instance.config?.fileCode
+    );
     if (!fileManager.checkPath(fileName)) throw new Error("Invalid file name");
     const rootDir = fileManager.toAbsolutePath(".");
 
@@ -338,7 +350,12 @@ export class ModService {
   }
 
   public async deleteMod(instanceUuid: string, fileName: string): Promise<void> {
-    const fileManager = getFileManager(instanceUuid);
+    const instance = InstanceSubsystem.getInstance(instanceUuid)!;
+    const cwd = instance.absoluteCwdPath();
+    const fileManager = new FileManager(
+      resolveMCDRServerRoot(instance.config.type, cwd) ?? cwd,
+      instance.config?.fileCode
+    );
     if (!fileManager.checkPath(fileName)) throw new Error("Invalid file name");
     const rootDir = fileManager.toAbsolutePath(".");
 
@@ -367,7 +384,12 @@ export class ModService {
     type: "mod" | "plugin",
     options: { fallbackUrl?: string } = {}
   ) {
-    const fileManager = getFileManager(instanceUuid);
+    const instance = InstanceSubsystem.getInstance(instanceUuid)!;
+    const cwd = instance.absoluteCwdPath();
+    const fileManager = new FileManager(
+      resolveMCDRServerRoot(instance.config.type, cwd) ?? cwd,
+      instance.config?.fileCode
+    );
     const rootDir = fileManager.toAbsolutePath(".");
 
     // Determine the save directory based on what exists (case-sensitive check for Linux)
@@ -399,7 +421,12 @@ export class ModService {
     type: "mod" | "plugin",
     fileName?: string
   ): Promise<ModConfigFile[]> {
-    const fileManager = getFileManager(instanceUuid);
+    const instance = InstanceSubsystem.getInstance(instanceUuid)!;
+    const cwd = instance.absoluteCwdPath();
+    const fileManager = new FileManager(
+      resolveMCDRServerRoot(instance.config.type, cwd) ?? cwd,
+      instance.config?.fileCode
+    );
     if (fileName && !fileManager.checkPath(fileName)) throw new Error("Invalid file name");
     if (modId && !fileManager.checkPath(modId)) throw new Error("Invalid mod ID");
     const rootDir = fileManager.toAbsolutePath(".");
